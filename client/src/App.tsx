@@ -21,13 +21,6 @@ function App() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetch('/api/config')
-      .then(res => res.json())
-      .then(config => {
-        gameController.setApiKey(config.geminiApiKey);
-      })
-      .catch(err => console.error('Failed to fetch API key:', err));
-    
     gameController.onStateChange((state) => {
       setGameState(state);
     });
