@@ -1,4 +1,3 @@
-
 # NEURO-LINK: Protocol Zero
 
 <div align="center">
@@ -83,7 +82,7 @@ The game will be available at `http://localhost:5000`
    - **Hackers** 👨‍💻 - Know the secret word
    - **Impostor** 🕵️ - Don't know the word, must blend in
 
-2. **Description Phase** - Players take turns (30s each) describing the word without saying it
+2. **Description Phase** - Players take turns (60s each) describing the word without saying it
 
 3. **Voting** - After all turns, everyone votes for who they think is the impostor
 
@@ -177,7 +176,7 @@ SESSION_SECRET=your_random_secret_here
 ### Game Settings
 
 - **Player Count**: 2-8 players recommended
-- **Turn Duration**: 30 seconds per player
+- **Turn Duration**: 60 seconds per player
 - **Role Distribution**: 1 impostor, rest are hackers
 - **Network**: Requires local network or public internet for P2P
 
