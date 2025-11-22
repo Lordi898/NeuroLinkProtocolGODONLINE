@@ -1,0 +1,88 @@
+Role: Acting as a Lead Frontend Architect & Game Designer.
+Objective: Build "NEURO-LINK: Protocol Zero", a P2P local-multiplayer social deduction game.
+Constraints (CRITICAL):
+Zero Backend Cost: Use peerjs public cloud. No custom servers.
+Resilience (Offline First): The game MUST work without an API Key. Implement a hybrid system: try Google Gemini API first; if the key is missing or the call fails, fallback immediately to a hardcoded local database of words.
+Deployment Ready: The final code must be ready to deploy to Vercel without configuration errors.
+1. ARCHITECTURE & TECH STACK
+Core: React 18 (Vite), TypeScript.
+State: React Context API (GameContext, NetworkContext).
+P2P Networking: peerjs (Client-side WebRTC).
+Styling: Tailwind CSS.
+Animations: Framer Motion (AnimatePresence, motion.div).
+Icons: Lucide React.
+AI/Logic: @google/generative-ai (with robust Error Handling).
+Utils: clsx, tailwind-merge, qrcode.react.
+2. VISUAL IDENTITY: "CYBERPUNK TERMINAL"
+Do not use default styles. Implement a custom Design System in index.css:
+Background: #050505 (Void Black) with a subtle CSS Grid overlay (bg-grid-pattern).
+Typography: Import 'JetBrains Mono' or 'Share Tech Mono' from Google Fonts. All text is uppercase/monospaced.
+Color Palette:
+var(--neon-green): #0f0 (Hackers)
+var(--neon-red): #f00 (Glitch/Impostor)
+var(--neon-cyan): #0ff (System)
+Custom CSS Classes:
+.scanline: A moving gradient overlay to simulate CRT screens.
+.text-glow: Text-shadow using the variable colors.
+.glitch-effect: Keyframe animation shifting clip-path.
+3. ROBUST FEATURE IMPLEMENTATION
+A. Networking (The "Wi-Fi Party" Logic)
+Host:
+Initialize Peer with new Peer(null, { debug: 2 }).
+Store connections in a Map<string, DataConnection>.
+Heartbeat: Send a ping every 5 seconds to check active players.
+Client:
+Auto-reconnect logic if connection drops briefly.
+Vibration API (navigator.vibrate(200)) on receiving specific game events (like "Sabotage").
+B. The "Hybrid" Brain (Game Logic)
+Create a file src/lib/gameMaster.ts:
+Primary Method: generateSecretWord(apiKey) -> Calls Gemini.
+Fallback Method: getLocalSecretWord() -> Picks from a predefined array of 100+ distinct words/categories (e.g., {word: "Drone", category: "Tech"}, {word: "Sushi", category: "Food"}).
+Logic: Try Gemini. On catch or if apiKey is empty strings, use Fallback. This ensures the game is playable immediately.
+C. Game Phases (The Loop)
+LOBBY: QR Code display. Player list with "Signal Strength" indicators (simulated).
+ROLE_ASSIGNMENT:
+Randomly pick 1 Impostor.
+Animation: "DECRYPTING..." bar fills up.
+Result: Hackers see Word. Impostor sees "ERROR: SIGNAL LOST".
+GAMEPLAY (The Timer):
+Turn-based system. Active player glows Green.
+15s countdown. If 0, auto-skip.
+Impostor Ability: "Noise Bomb". Button visible only to Impostor. When clicked, Host sends { type: 'NOISE_BOMB' }. All clients execute a CSS shake animation and play a static noise sound.
+VOTING:
+Click to vote.
+Host calculates results. Reveal logic: "Analyzing packet... Player X... ELIMINATED."
+4. FILE STRUCTURE & COMPONENTS
+Structure the app exactly like this:
+src/components/ui/: Reusable atoms (NeonButton, GlitchText, Card, Scanline).
+src/components/game/: Phase components (Lobby, RoleReveal, GameLoop, Voting, GameOver).
+src/hooks/: usePeer.ts, useGameLogic.ts.
+src/data/: fallbackWords.ts (The offline database).
+5. SPECIFIC UX DETAILS (DO NOT IGNORE)
+Mobile View (Clients): Large touch targets. No tiny text. The entire screen turns Red if you are the Impostor.
+Desktop View (Host): Dashboard layout. Logs on the right, QR on the left, timer top-center.
+Audio Feedback: Create a SoundManager using standard HTML5 Audio (use placeholder synth sounds or pure CSS visual feedback if audio assets are missing, but set up the structure).
+EXECUTION INSTRUCTION:
+Start by scaffolding the project styling and the fallbackWords.ts data to ensure no dependency breakage. Then build the NetworkContext. Finally, assemble the Game Phases. The result must be a single, cohesive, bug-free application ready to run.
+### 6. CRITICAL UX POLISH (THE "LAN PARTY" DETAILS)
+
+**A. Screen Wake Lock (Anti-Sleep):**
+*   Implement `navigator.wakeLock` API in the `GameContext`.
+*   When the game starts, request the screen to stay awake. This is vital for mobile players so their phones don't lock while thinking.
+
+**B. Host Privacy Logic (The "Jackbox" Model):**
+*   **Concept:** The Host Device (Laptop/PC) acts primarily as the **Shared Spectator Screen** (showing the Timer, QR, and Voting Results publicly).
+*   **Playing as Host:** Include a toggle in the Host Lobby: "Play on this device?".
+    *   If `FALSE` (Default): The Host screen shows NO secret words, only public info. The Host user must scan the QR with their phone to play.
+    *   If `TRUE`: Add a "Privacy Shield" UI (click to reveal word) so the Host can play on the main screen without spoiling the word to the room.
+
+**C. Synthesized Audio (No External Assets):**
+*   Do NOT try to load `.mp3` or `.wav` files (they will fail).
+*   Create a `playSynthSound(type)` function using the native **Web Audio API** (Oscillators).
+    *   `'connect'`: High-pitch beep (Sine wave).
+    *   `'glitch'`: Random noise buffer (Sawtooth wave).
+    *   `'timer'`: Low tick (Square wave).
+*   This ensures sound works 100% offline without missing assets.
+
+**D. PWA Capabilities:**
+*   Add a simple `manifest.json` configuration in the index HTML/Vite config so players on Android/iOS can "Add to Home Screen" and play fullscreen without browser bars.
