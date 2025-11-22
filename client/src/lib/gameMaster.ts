@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import { getRandomWord, type WordData } from '@/data/fallbackWords';
 
 export async function generateSecretWord(apiKey?: string): Promise<WordData> {
@@ -8,9 +8,7 @@ export async function generateSecretWord(apiKey?: string): Promise<WordData> {
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-
+    const genAI = new GoogleGenAI({ apiKey });
     const prompt = `Generate a single random word suitable for a social deduction game. The word should be:
 - A concrete noun (not abstract)
 - Easy to describe without saying it directly
@@ -22,9 +20,11 @@ Respond ONLY with the word in UPPERCASE, followed by a pipe character, then the 
 Example format: PIZZA|FOOD
 Do not include any other text.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text().trim();
+    const result = await genAI.models.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt
+    });
+    const text = result.text?.trim() || '';
     
     const parts = text.split('|');
     if (parts.length === 2) {

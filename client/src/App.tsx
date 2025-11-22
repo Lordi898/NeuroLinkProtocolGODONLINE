@@ -1,141 +1,223 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useToast } from "@/hooks/use-toast";
 import { JoinScreen } from "@/components/game/JoinScreen";
 import { LobbyScreen } from "@/components/game/LobbyScreen";
 import { RoleRevealScreen } from "@/components/game/RoleRevealScreen";
 import { GameplayScreen } from "@/components/game/GameplayScreen";
 import { VotingScreen } from "@/components/game/VotingScreen";
 import { GameOverScreen } from "@/components/game/GameOverScreen";
+import { GameController } from "@/lib/gameController";
+import { type GameState } from "@/lib/gameState";
 import { type Player } from "@/components/PlayerList";
 
-type GamePhase = 'join' | 'lobby' | 'role-reveal' | 'gameplay' | 'voting' | 'game-over';
+const gameController = new GameController();
 
 function App() {
-  const [phase, setPhase] = useState<GamePhase>('join');
-  const [playOnHost, setPlayOnHost] = useState(false);
-  
-  const mockPlayers: Player[] = [
-    { id: '1', name: 'CIPHER', isHost: true, signalStrength: 100 },
-    { id: '2', name: 'GHOST', isHost: false, signalStrength: 75 },
-    { id: '3', name: 'NEO', isHost: false, signalStrength: 100 },
-    { id: '4', name: 'TRINITY', isHost: false, signalStrength: 50 },
-  ];
+  const [gameState, setGameState] = useState<GameState>(gameController.getState());
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(config => {
+        gameController.setApiKey(config.geminiApiKey);
+      })
+      .catch(err => console.error('Failed to fetch API key:', err));
+    
+    gameController.onStateChange((state) => {
+      setGameState(state);
+    });
+
+    return () => {
+      gameController.disconnect();
+    };
+  }, []);
+
+  const handleCreateRoom = async (playerName: string) => {
+    try {
+      await gameController.createRoom(playerName);
+      toast({
+        title: "ROOM CREATED",
+        description: `CODE: ${gameController.getState().roomCode}`,
+      });
+    } catch (error) {
+      toast({
+        title: "ERROR",
+        description: "FAILED TO CREATE ROOM",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleJoinRoom = async (playerName: string, roomCode: string) => {
+    try {
+      await gameController.joinRoom(playerName, roomCode);
+      toast({
+        title: "CONNECTED",
+        description: `JOINED ROOM: ${roomCode}`,
+      });
+    } catch (error) {
+      toast({
+        title: "ERROR",
+        description: "FAILED TO JOIN ROOM",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleStartGame = async () => {
+    await gameController.startGame(gameState.playOnHost);
+  };
+
+  const handleEndTurn = () => {
+    gameController.endTurn();
+  };
+
+  const handleCastVote = (targetId: string) => {
+    gameController.castVote(targetId);
+  };
+
+  const handleNoiseBomb = () => {
+    gameController.noiseBomb();
+  };
+
+  const handlePlayAgain = () => {
+    gameController.playAgain();
+  };
+
+  const handleBackToLobby = () => {
+    gameController.backToLobby();
+  };
+
+  const handlePlayOnHostChange = (value: boolean) => {
+    gameController.getState().playOnHost = value;
+    setGameState({ ...gameController.getState(), playOnHost: value });
+  };
+
+  const localPlayer = gameState.players.find(p => p.id === gameState.localPlayerId);
+  const isHost = gameState.localPlayerId === gameState.hostPlayerId;
+  const isImpostor = localPlayer?.isImpostor || false;
+  const isMyTurn = gameState.activePlayerId === gameState.localPlayerId;
+  const impostorPlayer = gameState.players.find(p => p.id === gameState.impostorPlayerId);
+
+  const playersWithSignal: Player[] = gameState.players.map(p => ({
+    ...p,
+    signalStrength: 100
+  }));
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <div className="min-h-screen bg-background text-foreground">
-          {phase === 'join' && (
+          {gameState.phase === 'join' && (
             <JoinScreen
-              onCreateRoom={(name) => {
-                console.log('Created room with name:', name);
-                setPhase('lobby');
-              }}
-              onJoinRoom={(name, code) => {
-                console.log('Joined room:', name, code);
-                setPhase('lobby');
-              }}
+              onCreateRoom={handleCreateRoom}
+              onJoinRoom={handleJoinRoom}
             />
           )}
 
-          {phase === 'lobby' && (
+          {gameState.phase === 'lobby' && (
             <LobbyScreen
-              roomCode="X7K9P2"
-              players={mockPlayers}
-              isHost={true}
-              onStartGame={() => setPhase('role-reveal')}
-              playOnHost={playOnHost}
-              onPlayOnHostChange={setPlayOnHost}
+              roomCode={gameState.roomCode}
+              players={playersWithSignal}
+              isHost={isHost}
+              onStartGame={handleStartGame}
+              playOnHost={gameState.playOnHost}
+              onPlayOnHostChange={handlePlayOnHostChange}
             />
           )}
 
-          {phase === 'role-reveal' && (
+          {gameState.phase === 'role-reveal' && (
             <RoleRevealScreen
-              isImpostor={false}
-              secretWord="CYBERDECK"
-              category="TECH"
-              onRevealComplete={() => setPhase('gameplay')}
+              isImpostor={isImpostor}
+              secretWord={gameState.secretWord?.word}
+              category={gameState.secretWord?.category}
+              onRevealComplete={() => {}}
             />
           )}
 
-          {phase === 'gameplay' && (
+          {gameState.phase === 'gameplay' && (
             <GameplayScreen
-              players={mockPlayers}
-              activePlayerId="2"
-              timeRemaining={12}
-              isImpostor={false}
-              isMyTurn={false}
-              secretWord="CYBERDECK"
-              category="TECH"
-              onNoiseBomb={() => console.log('Noise bomb activated!')}
-              onEndTurn={() => console.log('Turn ended')}
+              players={playersWithSignal}
+              activePlayerId={gameState.activePlayerId || ''}
+              timeRemaining={gameState.turnTimeRemaining}
+              isImpostor={isImpostor}
+              isMyTurn={isMyTurn}
+              secretWord={gameState.secretWord?.word}
+              category={gameState.secretWord?.category}
+              onNoiseBomb={isImpostor ? handleNoiseBomb : undefined}
+              onEndTurn={handleEndTurn}
             />
           )}
 
-          {phase === 'voting' && (
+          {gameState.phase === 'voting' && (
             <VotingScreen
-              players={mockPlayers}
-              onVote={(id) => console.log('Voted for:', id)}
+              players={playersWithSignal}
+              onVote={handleCastVote}
+              votedPlayerId={localPlayer?.votedFor}
             />
           )}
 
-          {phase === 'game-over' && (
+          {gameState.phase === 'game-over' && impostorPlayer && (
             <GameOverScreen
-              winner="hackers"
-              impostorPlayer={mockPlayers[1]}
-              onPlayAgain={() => setPhase('lobby')}
-              onBackToLobby={() => setPhase('join')}
+              winner={gameState.winner || 'hackers'}
+              impostorPlayer={impostorPlayer}
+              onPlayAgain={handlePlayAgain}
+              onBackToLobby={handleBackToLobby}
             />
           )}
         </div>
 
-        <div className="fixed bottom-4 right-4 z-50 flex gap-2 flex-wrap max-w-xs">
-          <button
-            onClick={() => setPhase('join')}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-join"
-          >
-            JOIN
-          </button>
-          <button
-            onClick={() => setPhase('lobby')}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-lobby"
-          >
-            LOBBY
-          </button>
-          <button
-            onClick={() => setPhase('role-reveal')}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-reveal"
-          >
-            REVEAL
-          </button>
-          <button
-            onClick={() => setPhase('gameplay')}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-gameplay"
-          >
-            PLAY
-          </button>
-          <button
-            onClick={() => setPhase('voting')}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-voting"
-          >
-            VOTE
-          </button>
-          <button
-            onClick={() => setPhase('game-over')}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-gameover"
-          >
-            END
-          </button>
-        </div>
+        {process.env.NODE_ENV === 'development' && (
+          <div className="fixed bottom-4 right-4 z-50 flex gap-2 flex-wrap max-w-xs">
+            <button
+              onClick={() => gameController.getState().phase = 'join'}
+              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+              data-testid="debug-join"
+            >
+              JOIN
+            </button>
+            <button
+              onClick={() => setGameState({ ...gameState, phase: 'lobby' })}
+              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+              data-testid="debug-lobby"
+            >
+              LOBBY
+            </button>
+            <button
+              onClick={() => setGameState({ ...gameState, phase: 'role-reveal' })}
+              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+              data-testid="debug-reveal"
+            >
+              REVEAL
+            </button>
+            <button
+              onClick={() => setGameState({ ...gameState, phase: 'gameplay' })}
+              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+              data-testid="debug-gameplay"
+            >
+              PLAY
+            </button>
+            <button
+              onClick={() => setGameState({ ...gameState, phase: 'voting' })}
+              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+              data-testid="debug-voting"
+            >
+              VOTE
+            </button>
+            <button
+              onClick={() => setGameState({ ...gameState, phase: 'game-over' })}
+              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+              data-testid="debug-gameover"
+            >
+              END
+            </button>
+          </div>
+        )}
 
         <Toaster />
       </TooltipProvider>

@@ -71,9 +71,23 @@ export class SoundManager {
     }
   }
 
-  vibrate(duration: number = 200): void {
+  vibrate(pattern: number | number[] = 200): void {
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
-      navigator.vibrate(duration);
+      try {
+        navigator.vibrate(pattern);
+      } catch (error) {
+        console.error('[SOUND] Vibration failed:', error);
+      }
+    }
+  }
+
+  stopVibrate(): void {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(0);
+      } catch (error) {
+        console.error('[SOUND] Stop vibration failed:', error);
+      }
     }
   }
 }
