@@ -45,7 +45,7 @@ export class GameStateManager {
       players: [],
       localPlayerId: '',
       hostPlayerId: '',
-      turnTimeRemaining: 15,
+      turnTimeRemaining: 45,
       playOnHost: false,
       votes: new Map(),
       chatMessages: []
@@ -97,7 +97,7 @@ export class GameStateManager {
 
   startTurn(playerId: string): void {
     this.state.activePlayerId = playerId;
-    this.state.turnTimeRemaining = 15;
+    this.state.turnTimeRemaining = 45;
     this.notifyStateChange();
     this.startTurnTimer();
   }

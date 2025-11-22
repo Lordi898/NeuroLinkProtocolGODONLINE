@@ -47,7 +47,7 @@ export function GameplayScreen({
 
       <TimerDisplay 
         timeRemaining={timeRemaining} 
-        maxTime={15} 
+        maxTime={45} 
         className="max-w-md mx-auto w-full"
       />
 
