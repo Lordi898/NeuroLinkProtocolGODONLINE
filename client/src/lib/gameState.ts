@@ -55,6 +55,7 @@ export interface GameState {
   votingTimeRemaining: number;
   votingResults: VotingResult[];
   eliminatedPlayerId?: string;
+  adminMode: boolean;
 }
 
 export class GameStateManager {
@@ -79,6 +80,7 @@ export class GameStateManager {
       currentRound: 0,
       votingTimeRemaining: 45,
       votingResults: [],
+      adminMode: false,
     };
   }
 

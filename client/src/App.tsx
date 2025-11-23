@@ -35,9 +35,13 @@ function App() {
     };
   }, []);
 
-  const handleCreateRoom = async (playerName: string) => {
+  const handleCreateRoom = async (playerName: string, adminMode: boolean = false) => {
     try {
       await gameController.createRoom(playerName);
+      if (adminMode) {
+        gameController.getState().adminMode = true;
+        setGameState(prev => ({ ...prev, adminMode: true }));
+      }
       toast({
         title: "ROOM CREATED",
         description: `CODE: ${gameController.getState().roomCode}`,
@@ -51,9 +55,13 @@ function App() {
     }
   };
 
-  const handleJoinRoom = async (playerName: string, roomCode: string) => {
+  const handleJoinRoom = async (playerName: string, roomCode: string, adminMode: boolean = false) => {
     try {
       await gameController.joinRoom(playerName, roomCode);
+      if (adminMode) {
+        gameController.getState().adminMode = true;
+        setGameState(prev => ({ ...prev, adminMode: true }));
+      }
       toast({
         title: "CONNECTED",
         description: `JOINED ROOM: ${roomCode}`,

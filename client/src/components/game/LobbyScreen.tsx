@@ -25,6 +25,7 @@ interface LobbyScreenProps {
   votingFrequency: number;
   onVotingFrequencyChange: (frequency: number) => void;
   onKickPlayer: (playerId: string) => void;
+  adminMode?: boolean;
 }
 
 export function LobbyScreen({
@@ -39,7 +40,8 @@ export function LobbyScreen({
   localPlayerId,
   votingFrequency,
   onVotingFrequencyChange,
-  onKickPlayer
+  onKickPlayer,
+  adminMode = false
 }: LobbyScreenProps) {
   const { language, setLanguage, theme, setTheme, styleMode, setStyleMode, t } = useLanguage();
 

@@ -9,8 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useLanguage } from '@/lib/languageContext';
 
 interface JoinScreenProps {
-  onCreateRoom: (playerName: string) => void;
-  onJoinRoom: (playerName: string, roomCode: string) => void;
+  onCreateRoom: (playerName: string, adminMode?: boolean) => void;
+  onJoinRoom: (playerName: string, roomCode: string, adminMode?: boolean) => void;
   onProfile?: () => void;
 }
 
@@ -32,13 +32,16 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile }: JoinScreenPr
 
   const handleCreateRoom = () => {
     if (playerName.trim()) {
-      onCreateRoom(playerName.toUpperCase());
+      onCreateRoom(playerName.toUpperCase(), isAdminMode);
+      setPlayerName('');
     }
   };
 
   const handleJoinRoom = () => {
     if (playerName.trim() && roomCode.trim()) {
-      onJoinRoom(playerName.toUpperCase(), roomCode.toUpperCase());
+      onJoinRoom(playerName.toUpperCase(), roomCode.toUpperCase(), isAdminMode);
+      setPlayerName('');
+      setRoomCode('');
     }
   };
 
