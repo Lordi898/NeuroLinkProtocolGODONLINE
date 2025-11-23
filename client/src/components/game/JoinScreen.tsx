@@ -42,7 +42,6 @@ export function JoinScreen({ onCreateRoom, onJoinRoom }: JoinScreenProps) {
           {t('gameDescription')}
         </p>
       </div>
-
       {/* Style, Theme and Language Selectors */}
       <div className="flex gap-4 flex-wrap justify-center">
         <div className="flex flex-col gap-2">
@@ -86,7 +85,6 @@ export function JoinScreen({ onCreateRoom, onJoinRoom }: JoinScreenProps) {
           </Select>
         </div>
       </div>
-
       {mode === 'menu' && (
         <div className="flex flex-col gap-4 w-full max-w-xs">
           <NeonButton 
@@ -108,12 +106,11 @@ export function JoinScreen({ onCreateRoom, onJoinRoom }: JoinScreenProps) {
           </NeonButton>
         </div>
       )}
-
       {mode === 'create' && (
         <TerminalCard title={t('hostNewGame')} className="w-full max-w-md">
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="player-name">{t('playerName')}</Label>
+            <div className="space-y-2 text-center">
+              <Label htmlFor="player-name" className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[12px]">{t('playerName')}</Label>
               <Input
                 id="player-name"
                 value={playerName}
@@ -144,12 +141,11 @@ export function JoinScreen({ onCreateRoom, onJoinRoom }: JoinScreenProps) {
           </div>
         </TerminalCard>
       )}
-
       {mode === 'join' && (
         <TerminalCard title={t('joinExistingGame')} className="w-full max-w-md">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="player-name-join">{t('playerName')}</Label>
+              <Label htmlFor="player-name-join" className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[12px]">{t('playerName')}</Label>
               <Input
                 id="player-name-join"
                 value={playerName}
@@ -161,7 +157,7 @@ export function JoinScreen({ onCreateRoom, onJoinRoom }: JoinScreenProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="room-code">{t('roomCode')}</Label>
+              <Label htmlFor="room-code" className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[12px]">{t('roomCode')}</Label>
               <Input
                 id="room-code"
                 value={roomCode}
@@ -192,7 +188,6 @@ export function JoinScreen({ onCreateRoom, onJoinRoom }: JoinScreenProps) {
           </div>
         </TerminalCard>
       )}
-
       {/* Creator Info Footer */}
       <div className="fixed bottom-4 text-center text-xs text-muted-foreground">
         <p>Created by <span className="font-bold text-secondary">Imanol Magaña</span></p>
