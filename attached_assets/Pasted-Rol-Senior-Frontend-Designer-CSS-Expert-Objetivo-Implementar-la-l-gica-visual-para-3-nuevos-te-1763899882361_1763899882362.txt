@@ -1,0 +1,53 @@
+Rol: Senior Frontend Designer & CSS Expert.
+Objetivo: Implementar la lógica visual para 3 nuevos temas desbloqueables en el archivo index.css y tailwind.config.js. El sistema debe basarse en Variables CSS y Data Attributes (data-theme="...") en el body para cambiar instantáneamente toda la estética.
+1. IMPORTACIÓN DE FUENTES (Google Fonts)
+Añade estas fuentes en el @import o <link> del proyecto:
+Matrix: VT323 (Pixelada/Terminal).
+Obsidian: Playfair Display (Elegante/Serif).
+Quantum: Rajdhani (Futurista/Tech).
+2. DEFINICIÓN DE VARIABLES CSS (index.css)
+Define las siguientes variables dentro de los selectores de tema.
+A. Tema [data-theme="matrix-retro"]
+--bg-primary: #000000 (Negro puro).
+--text-primary: #00ff41 (Verde Fósforo).
+--accent: #008f11 (Verde oscuro).
+--font-main: 'VT323', monospace.
+Efecto Especial: Añade un pseudo-elemento ::before fijo en la pantalla con pointer-events: none que tenga un background-image de líneas de escaneo (scanlines) y una animación de parpadeo CRT.
+B. Tema [data-theme="obsidian-lux"]
+--bg-primary: #121212 (Carbón mate).
+--text-primary: #f0f0f0 (Blanco perla).
+--accent: #d4af37 (Oro metálico).
+--font-main: 'Playfair Display', serif.
+Efecto Especial: Los botones y bordes deben tener un box-shadow suave dorado (0 4px 6px -1px rgba(212, 175, 55, 0.3)). Todo debe tener transition: all 0.5s ease.
+C. Tema [data-theme="quantum-divinity"]
+--bg-primary: #ffffff (Blanco Hielo).
+--text-primary: #1e293b (Slate 800).
+--accent: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%) (Holográfico).
+--font-main: 'Rajdhani', sans-serif.
+Efecto Especial: Glassmorphism extremo. Las tarjetas deben tener background: rgba(255, 255, 255, 0.25), backdrop-filter: blur(16px) y un borde con gradiente animado (animación de border-image o background-origin).
+3. EXTENSIÓN DE TAILWIND (tailwind.config.js)
+Extiende la configuración para usar estas variables:
+code
+JavaScript
+theme: {
+  extend: {
+    colors: {
+      theme: {
+        bg: 'var(--bg-primary)',
+        text: 'var(--text-primary)',
+        accent: 'var(--accent)',
+      }
+    },
+    fontFamily: {
+      theme: ['var(--font-main)', 'sans-serif'],
+    },
+    animation: {
+      'crt-flicker': 'flicker 0.15s infinite',
+      'rgb-border': 'rotate-hue 3s linear infinite',
+    }
+  }
+}
+4. TAREA DE CÓDIGO
+Genera el código CSS completo para index.css incluyendo las animaciones keyframes (flicker, scanlines).
+Asegúrate de que al cambiar el atributo data-theme en el <body>, la fuente (font-theme) y los colores (bg-theme-bg, text-theme-text) cambien automáticamente.
+Crea clases de utilidad .theme-card y .theme-button que apliquen los estilos específicos (bordes dorados para Obsidian, glassmorphism para Quantum) usando @apply o CSS anidado.

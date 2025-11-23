@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Playfair+Display:wght@400;700&family=Rajdhani:wght@400;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -1332,4 +1334,77 @@
       6px 6px 0px rgba(255, 0, 0, 0.3),
       9px 9px 0px rgba(255, 0, 0, 0.1) !important;
   }
+}
+
+/* THEME SYSTEM - Matrix Retro, Obsidian Lux, Quantum Divinity */
+[data-playable-theme="matrix-retro"] {
+  --theme-bg: #000000;
+  --theme-text: #00ff41;
+  --theme-accent: #008f11;
+  --theme-font: 'VT323', monospace;
+}
+
+[data-playable-theme="obsidian-lux"] {
+  --theme-bg: #121212;
+  --theme-text: #f0f0f0;
+  --theme-accent: #d4af37;
+  --theme-font: 'Playfair Display', serif;
+}
+
+[data-playable-theme="quantum-divinity"] {
+  --theme-bg: #ffffff;
+  --theme-text: #1e293b;
+  --theme-accent: #00c6ff;
+  --theme-font: 'Rajdhani', sans-serif;
+}
+
+/* Matrix Retro - CRT Scanlines Effect */
+[data-playable-theme="matrix-retro"]::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: crt-flicker 0.15s infinite;
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.97; }
+  50% { opacity: 1; }
+  100% { opacity: 0.97; }
+}
+
+/* Obsidian Lux - Golden Shadows */
+[data-playable-theme="obsidian-lux"] {
+  transition: all 0.5s ease;
+}
+
+[data-playable-theme="obsidian-lux"] * {
+  transition: all 0.5s ease;
+}
+
+[data-playable-theme="obsidian-lux"] button,
+[data-playable-theme="obsidian-lux"] [role="button"],
+[data-playable-theme="obsidian-lux"] .card,
+[data-playable-theme="obsidian-lux"] [class*="card"] {
+  box-shadow: 0 4px 6px -1px rgba(212, 175, 55, 0.3);
+}
+
+/* Quantum Divinity - Glassmorphism */
+[data-playable-theme="quantum-divinity"] .card,
+[data-playable-theme="quantum-divinity"] [class*="card"] {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
