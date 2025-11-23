@@ -41,7 +41,7 @@ export function LobbyScreen({
   onVotingFrequencyChange,
   onKickPlayer
 }: LobbyScreenProps) {
-  const { language, setLanguage, theme, setTheme, t } = useLanguage();
+  const { language, setLanguage, theme, setTheme, styleMode, setStyleMode, t } = useLanguage();
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center gap-8">
@@ -50,8 +50,22 @@ export function LobbyScreen({
       </GlitchText>
       <p className="text-secondary text-sm">{t('protocolZero')}</p>
 
-      {/* Theme and Language Selectors */}
+      {/* Style, Theme and Language Selectors */}
       <div className="flex gap-4 flex-wrap justify-center">
+        <div className="flex flex-col gap-2">
+          <Label className="text-xs text-center">{t('styleMode')}</Label>
+          <Select value={styleMode} onValueChange={(value) => setStyleMode(value as 'hacker' | 'futurista' | 'retro')}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="hacker">{t('styleModeHacker')}</SelectItem>
+              <SelectItem value="futurista">{t('styleModeFuturista')}</SelectItem>
+              <SelectItem value="retro">{t('styleModeRetro')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <div className="flex flex-col gap-2">
           <Label className="text-xs text-center">{t('theme')}</Label>
           <Select value={theme} onValueChange={(value) => setTheme(value as 'dark' | 'normal' | 'light')}>

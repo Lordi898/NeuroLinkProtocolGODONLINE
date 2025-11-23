@@ -6,6 +6,7 @@ import { NeonButton } from '../NeonButton';
 import { GlitchText } from '../GlitchText';
 import { Chat } from '../Chat';
 import { type ChatMessage } from '@/lib/gameState';
+import { useLanguage } from '@/lib/languageContext';
 
 interface GameplayScreenProps {
   players: Player[];
@@ -38,6 +39,7 @@ export function GameplayScreen({
   onSendChatMessage,
   localPlayerId
 }: GameplayScreenProps) {
+  const { t } = useLanguage();
   const [clueText, setClueText] = React.useState('');
   const activePlayer = players.find(p => p.id === activePlayerId);
 
@@ -45,15 +47,15 @@ export function GameplayScreen({
     <div className={`min-h-screen p-4 md:p-8 flex flex-col gap-4 md:gap-6 ${isMyTurn ? 'bg-primary/5' : ''}`}>
       <div className="text-center">
         <GlitchText className="text-3xl md:text-5xl block">
-          PROTOCOL ACTIVE
+          {t('protocolActive')}
         </GlitchText>
         {isMyTurn && (
           <div className="mt-2 animate-pulse">
             <p className="text-2xl md:text-3xl font-bold text-primary text-glow-green">
-              ⚡ YOUR TURN ⚡
+              ⚡ {t('yourTurn')} ⚡
             </p>
             <p className="text-sm md:text-base text-secondary mt-1">
-              GIVE YOUR CLUE NOW
+              {t('giveYourClue')}
             </p>
           </div>
         )}
@@ -66,7 +68,7 @@ export function GameplayScreen({
       />
 
       <div className="grid gap-4 md:gap-6 md:grid-cols-2 max-w-4xl mx-auto w-full">
-        <TerminalCard title="ACTIVE PLAYER">
+        <TerminalCard title={t('activePlayer')}>
           <div className="text-center py-4 md:py-8">
             <p className="text-2xl md:text-3xl font-bold text-primary text-glow-green">
               {activePlayer?.name || 'UNKNOWN'}
@@ -74,11 +76,11 @@ export function GameplayScreen({
           </div>
         </TerminalCard>
 
-        <TerminalCard title={isImpostor ? "YOUR ROLE" : "SECRET WORD"}>
+        <TerminalCard title={isImpostor ? t('yourRoleCard') : t('secretWordCard')}>
           <div className="text-center py-4 md:py-8">
             {isImpostor ? (
               <p className="text-2xl md:text-3xl font-bold text-destructive text-glow-red">
-                IMPOSTOR
+                {t('impostor')}
               </p>
             ) : (
               <>
@@ -97,13 +99,13 @@ export function GameplayScreen({
       {/* Clue Input - Only for active player */}
       {isMyTurn && onSubmitClue && (
         <div className="max-w-md mx-auto w-full px-4">
-          <TerminalCard title="SUBMIT CLUE (1-3 WORDS)">
+          <TerminalCard title={t('submitClue')}>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={clueText}
                 onChange={(e) => setClueText(e.target.value.slice(0, 50))}
-                placeholder="Enter clue..."
+                placeholder={t('enterClue')}
                 maxLength={50}
                 className="flex-1 px-3 py-2 rounded bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 data-testid="input-clue"
@@ -120,7 +122,7 @@ export function GameplayScreen({
                 className="touch-manipulation min-h-[48px]"
                 data-testid="button-submit-clue"
               >
-                SEND
+                {t('send')}
               </NeonButton>
             </div>
           </TerminalCard>
@@ -139,14 +141,14 @@ export function GameplayScreen({
               size="lg"
               className="flex-1 min-w-[140px] touch-manipulation min-h-[48px]"
             >
-              NOISE BOMB
+              {t('noiseBomb')}
             </NeonButton>
           )}
         </div>
       )}
 
       <div className="grid gap-4 md:gap-6 lg:grid-cols-2 max-w-4xl mx-auto w-full">
-        <TerminalCard title="CONNECTED USERS" scanline={false} className="order-2 lg:order-1">
+        <TerminalCard title={t('connectedUsers')} scanline={false} className="order-2 lg:order-1">
           <PlayerList players={players} activePlayerId={activePlayerId} />
         </TerminalCard>
 

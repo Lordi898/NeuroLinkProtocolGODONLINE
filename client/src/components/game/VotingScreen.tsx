@@ -6,6 +6,7 @@ import { Chat } from '../Chat';
 import { type Player } from '../PlayerList';
 import { type ChatMessage } from '@/lib/gameState';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/languageContext';
 
 interface VotingScreenProps {
   players: Player[];
@@ -28,6 +29,7 @@ export function VotingScreen({
   timeRemaining,
   showTimer = false
 }: VotingScreenProps) {
+  const { t } = useLanguage();
   const [selectedId, setSelectedId] = useState<string | null>(votedPlayerId || null);
 
   const handleVote = (playerId: string) => {
@@ -40,9 +42,9 @@ export function VotingScreen({
     <div className={`min-h-screen p-4 md:p-8 flex flex-col gap-${showTimer ? '6' : '8'}`}>
       <div className="text-center">
         <GlitchText className="text-4xl md:text-6xl block">
-          VOTE TO ELIMINATE
+          {t('voteToEliminate')}
         </GlitchText>
-        <p className="text-secondary mt-2">SELECT THE SUSPECTED IMPOSTOR</p>
+        <p className="text-secondary mt-2">{t('selectSuspectedImpostor')}</p>
         {showTimer && timeRemaining !== undefined && (
           <p className="text-xl text-destructive mt-2 animate-pulse">{timeRemaining}s</p>
         )}
@@ -50,7 +52,7 @@ export function VotingScreen({
 
       <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <TerminalCard title="PLAYERS">
+          <TerminalCard title={t('players')}>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
               {players.filter(p => !p.isEliminated).map((player) => (
                 <button
@@ -75,7 +77,7 @@ export function VotingScreen({
                       {player.name}
                     </p>
                     {selectedId === player.id && (
-                      <span className="text-xs text-destructive font-bold">VOTED</span>
+                      <span className="text-xs text-destructive font-bold">{t('voted')}</span>
                     )}
                   </div>
                 </button>
@@ -97,7 +99,7 @@ export function VotingScreen({
       {selectedId && !onSendChatMessage && (
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            WAITING FOR OTHER PLAYERS...
+            {t('waitingForPlayers')}
           </p>
         </div>
       )}

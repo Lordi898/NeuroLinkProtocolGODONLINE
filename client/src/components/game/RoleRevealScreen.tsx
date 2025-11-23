@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { GlitchText } from '../GlitchText';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/languageContext';
 
 interface RoleRevealScreenProps {
   isImpostor: boolean;
@@ -16,6 +17,7 @@ export function RoleRevealScreen({
   category,
   onRevealComplete
 }: RoleRevealScreenProps) {
+  const { t } = useLanguage();
   const [progress, setProgress] = useState(0);
   const [revealed, setRevealed] = useState(false);
 
@@ -45,7 +47,7 @@ export function RoleRevealScreen({
       {!revealed ? (
         <div className="w-full max-w-md space-y-8">
           <GlitchText className="text-2xl text-center block">
-            DECRYPTING...
+            {t('decrypting')}
           </GlitchText>
           <Progress value={progress} className="h-4 glow-pulse" />
           <p className="text-center text-sm text-muted-foreground">
@@ -57,18 +59,18 @@ export function RoleRevealScreen({
           {isImpostor ? (
             <>
               <GlitchText animate className="text-5xl md:text-7xl block text-destructive-foreground">
-                ERROR
+                {t('error')}
               </GlitchText>
               <p className="text-2xl md:text-4xl text-destructive-foreground">
-                SIGNAL LOST
+                {t('signalLost')}
               </p>
               <p className="text-lg text-destructive-foreground/80">
-                YOU ARE THE IMPOSTOR
+                {t('youAreImpostor')}
               </p>
             </>
           ) : (
             <>
-              <p className="text-sm text-muted-foreground">YOUR WORD IS</p>
+              <p className="text-sm text-muted-foreground">{t('yourWordIs')}</p>
               <GlitchText className="text-5xl md:text-7xl block">
                 {secretWord}
               </GlitchText>
@@ -76,7 +78,7 @@ export function RoleRevealScreen({
                 [{category}]
               </p>
               <p className="text-sm text-muted-foreground max-w-md">
-                DESCRIBE THIS WORD WITHOUT SAYING IT. FIND THE IMPOSTOR WHO DOESN'T KNOW IT.
+                {t('describeWord')}
               </p>
             </>
           )}

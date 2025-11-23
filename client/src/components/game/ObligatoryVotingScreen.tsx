@@ -7,6 +7,7 @@ import { TimerDisplay } from '../TimerDisplay';
 import { type Player } from '../PlayerList';
 import { type ChatMessage } from '@/lib/gameState';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/languageContext';
 
 interface ObligatoryVotingScreenProps {
   players: Player[];
@@ -27,6 +28,7 @@ export function ObligatoryVotingScreen({
   onSendChatMessage,
   localPlayerId
 }: ObligatoryVotingScreenProps) {
+  const { t } = useLanguage();
   const [selectedId, setSelectedId] = useState<string | null>(votedPlayerId || null);
 
   const handleVote = (playerId: string) => {
@@ -39,9 +41,9 @@ export function ObligatoryVotingScreen({
     <div className="min-h-screen p-4 md:p-8 flex flex-col gap-6">
       <div className="text-center">
         <GlitchText className="text-4xl md:text-6xl block">
-          MANDATORY VOTING
+          {t('mandatoryVoting')}
         </GlitchText>
-        <p className="text-secondary mt-2">CHOOSE WHO TO ELIMINATE</p>
+        <p className="text-secondary mt-2">{t('chooseWhoToEliminate')}</p>
       </div>
 
       <TimerDisplay 
@@ -52,7 +54,7 @@ export function ObligatoryVotingScreen({
 
       <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <TerminalCard title="PLAYERS">
+          <TerminalCard title={t('players')}>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
               {players.filter(p => !p.isEliminated).map((player) => (
                 <button
@@ -77,7 +79,7 @@ export function ObligatoryVotingScreen({
                       {player.name}
                     </p>
                     {selectedId === player.id && (
-                      <span className="text-xs text-destructive font-bold">VOTED</span>
+                      <span className="text-xs text-destructive font-bold">{t('voted')}</span>
                     )}
                   </div>
                 </button>

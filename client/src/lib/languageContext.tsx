@@ -3,12 +3,15 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 type Language = 'en' | 'es';
 type Theme = 'dark' | 'normal' | 'light';
+type StyleMode = 'hacker' | 'futurista' | 'retro';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  styleMode: StyleMode;
+  setStyleMode: (mode: StyleMode) => void;
   t: (key: string) => string;
 }
 
@@ -34,6 +37,10 @@ const translations = {
     'themeNormal': 'NORMAL',
     'themeLight': 'LIGHT',
     'language': 'LANGUAGE',
+    'styleMode': 'STYLE',
+    'styleModeHacker': 'HACKER',
+    'styleModeFuturista': 'FUTURISTA',
+    'styleModeRetro': 'RETRO',
     
     // Lobby Screen
     'connectedUsers': 'CONNECTED USERS',
@@ -49,10 +56,18 @@ const translations = {
     'youAreHacker': 'YOU ARE A HACKER',
     'secretWord': 'SECRET WORD',
     'category': 'CATEGORY',
+    'decrypting': 'DECRYPTING...',
+    'error': 'ERROR',
+    'signalLost': 'SIGNAL LOST',
+    'yourRole': 'YOUR ROLE',
+    'impostor': 'IMPOSTOR',
+    'yourWordIs': 'YOUR WORD IS',
+    'describeWord': 'DESCRIBE THIS WORD WITHOUT SAYING IT. FIND THE IMPOSTOR WHO DOESN\'T KNOW IT.',
     
     // Gameplay
+    'protocolActive': 'PROTOCOL ACTIVE',
     'yourTurn': 'YOUR TURN',
-    'giveClue': 'GIVE A CLUE',
+    'giveYourClue': 'GIVE YOUR CLUE NOW',
     'activePlayer': 'ACTIVE PLAYER',
     'timeRemaining': 'TIME',
     'endTurn': 'END TURN',
@@ -60,12 +75,21 @@ const translations = {
     'chat': 'CHAT',
     'typeMessage': 'TYPE MESSAGE...',
     'send': 'SEND',
+    'submitClue': 'SUBMIT CLUE (1-3 WORDS)',
+    'enterClue': 'Enter clue...',
+    'connectedUsers': 'CONNECTED USERS',
     'wordBanned': 'WORD BANNED',
+    'secretWordCard': 'SECRET WORD',
+    'yourRoleCard': 'YOUR ROLE',
     
     // Voting
-    'voteForImpostor': 'VOTE FOR THE IMPOSTOR',
-    'castYourVote': 'CAST YOUR VOTE',
+    'voteToEliminate': 'VOTE TO ELIMINATE',
+    'selectSuspectedImpostor': 'SELECT THE SUSPECTED IMPOSTOR',
+    'players': 'PLAYERS',
+    'waitingForPlayers': 'WAITING FOR OTHER PLAYERS...',
     'voted': 'VOTED',
+    'mandatoryVoting': 'MANDATORY VOTING',
+    'chooseWhoToEliminate': 'CHOOSE WHO TO ELIMINATE',
     
     // Game Over
     'hackersWin': 'HACKERS WIN',
@@ -74,10 +98,7 @@ const translations = {
     'playAgain': 'PLAY AGAIN',
     'backToLobby': 'BACK TO LOBBY',
     
-    // Clue and Voting
-    'incomingClue': 'INCOMING CLUE',
-    'mandatoryVoting': 'MANDATORY VOTING',
-    'chooseWhoToEliminate': 'CHOOSE WHO TO ELIMINATE',
+    // Voting Results
     'votingResults': 'VOTING RESULTS',
     'tieNoElimination': 'TIE - NO ONE ELIMINATED',
     'eliminated': 'ELIMINATED',
@@ -88,15 +109,6 @@ const translations = {
     'everyRound': 'EVERY ROUND',
     'every2Rounds': 'EVERY 2 ROUNDS',
     'every3Rounds': 'EVERY 3 ROUNDS',
-
-    // Toast messages
-    'roomCreated': 'ROOM CREATED',
-    'code': 'CODE',
-    'error': 'ERROR',
-    'failedCreateRoom': 'FAILED TO CREATE ROOM',
-    'connected': 'CONNECTED',
-    'joinedRoom': 'JOINED ROOM',
-    'failedJoinRoom': 'FAILED TO JOIN ROOM',
   },
   es: {
     // Join Screen
@@ -119,6 +131,10 @@ const translations = {
     'themeNormal': 'NORMAL',
     'themeLight': 'CLARO',
     'language': 'IDIOMA',
+    'styleMode': 'ESTILO',
+    'styleModeHacker': 'HACKER',
+    'styleModeFuturista': 'FUTURISTA',
+    'styleModeRetro': 'RETRO',
     
     // Lobby Screen
     'connectedUsers': 'USUARIOS CONECTADOS',
@@ -134,10 +150,18 @@ const translations = {
     'youAreHacker': 'ERES UN HACKER',
     'secretWord': 'PALABRA SECRETA',
     'category': 'CATEGORÍA',
+    'decrypting': 'DESCIFRANDO...',
+    'error': 'ERROR',
+    'signalLost': 'SEÑAL PERDIDA',
+    'yourRole': 'TU ROL',
+    'impostor': 'IMPOSTOR',
+    'yourWordIs': 'TU PALABRA ES',
+    'describeWord': 'DESCRIBE ESTA PALABRA SIN DECIRLA. ENCUENTRA AL IMPOSTOR QUE NO LA CONOCE.',
     
     // Gameplay
+    'protocolActive': 'PROTOCOLO ACTIVO',
     'yourTurn': 'TU TURNO',
-    'giveClue': 'DA UNA PISTA',
+    'giveYourClue': 'DA TU PISTA AHORA',
     'activePlayer': 'JUGADOR ACTIVO',
     'timeRemaining': 'TIEMPO',
     'endTurn': 'TERMINAR TURNO',
@@ -145,12 +169,21 @@ const translations = {
     'chat': 'CHAT',
     'typeMessage': 'ESCRIBE MENSAJE...',
     'send': 'ENVIAR',
+    'submitClue': 'ENVIAR PISTA (1-3 PALABRAS)',
+    'enterClue': 'Introduce pista...',
+    'connectedUsers': 'USUARIOS CONECTADOS',
     'wordBanned': 'PALABRA PROHIBIDA',
+    'secretWordCard': 'PALABRA SECRETA',
+    'yourRoleCard': 'TU ROL',
     
     // Voting
-    'voteForImpostor': 'VOTA AL IMPOSTOR',
-    'castYourVote': 'EMITE TU VOTO',
+    'voteToEliminate': 'VOTA PARA EXPULSAR',
+    'selectSuspectedImpostor': 'ELIGE AL IMPOSTOR SOSPECHOSO',
+    'players': 'JUGADORES',
+    'waitingForPlayers': 'ESPERANDO A OTROS JUGADORES...',
     'voted': 'VOTADO',
+    'mandatoryVoting': 'VOTACIÓN OBLIGATORIA',
+    'chooseWhoToEliminate': 'ELIGE A QUIÉN EXPULSAR',
     
     // Game Over
     'hackersWin': 'GANAN LOS HACKERS',
@@ -159,10 +192,7 @@ const translations = {
     'playAgain': 'JUGAR DE NUEVO',
     'backToLobby': 'VOLVER AL LOBBY',
     
-    // Clue and Voting
-    'incomingClue': 'PISTA ENTRANTE',
-    'mandatoryVoting': 'VOTACIÓN OBLIGATORIA',
-    'chooseWhoToEliminate': 'ELIGE A QUIÉN EXPULSAR',
+    // Voting Results
     'votingResults': 'RESULTADOS DE VOTACIÓN',
     'tieNoElimination': 'EMPATE - NADIE EXPULSADO',
     'eliminated': 'EXPULSADO',
@@ -173,15 +203,6 @@ const translations = {
     'everyRound': 'CADA RONDA',
     'every2Rounds': 'CADA 2 RONDAS',
     'every3Rounds': 'CADA 3 RONDAS',
-
-    // Toast messages
-    'roomCreated': 'SALA CREADA',
-    'code': 'CÓDIGO',
-    'error': 'ERROR',
-    'failedCreateRoom': 'FALLO AL CREAR SALA',
-    'connected': 'CONECTADO',
-    'joinedRoom': 'UNIDO A SALA',
-    'failedJoinRoom': 'FALLO AL UNIRSE A SALA',
   }
 };
 
@@ -198,6 +219,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return (saved === 'normal' || saved === 'light' ? saved : 'dark') as Theme;
   });
 
+  const [styleMode, setStyleModeState] = useState<StyleMode>(() => {
+    const saved = localStorage.getItem('styleMode');
+    return (saved === 'futurista' || saved === 'retro' ? saved : 'hacker') as StyleMode;
+  });
+
   useEffect(() => {
     localStorage.setItem('language', language);
   }, [language]);
@@ -206,6 +232,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem('styleMode', styleMode);
+    document.documentElement.setAttribute('data-style', styleMode);
+  }, [styleMode]);
 
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.en] || key;
@@ -219,8 +250,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setThemeState(newTheme);
   };
 
+  const setStyleMode = (mode: StyleMode) => {
+    setStyleModeState(mode);
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, theme, setTheme, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, theme, setTheme, styleMode, setStyleMode, t }}>
       {children}
     </LanguageContext.Provider>
   );
