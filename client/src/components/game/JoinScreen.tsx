@@ -37,16 +37,14 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile, onLeaderboard,
   };
 
   const handleCreateRoom = () => {
-    if (playerName.trim()) {
-      onCreateRoom(playerName.toUpperCase(), isAdminMode);
-      setPlayerName('');
+    if (user?.username) {
+      onCreateRoom(user.username.toUpperCase(), isAdminMode);
     }
   };
 
   const handleJoinRoom = () => {
-    if (playerName.trim() && roomCode.trim()) {
-      onJoinRoom(playerName.toUpperCase(), roomCode.toUpperCase(), isAdminMode);
-      setPlayerName('');
+    if (user?.username && roomCode.trim()) {
+      onJoinRoom(user.username.toUpperCase(), roomCode.toUpperCase(), isAdminMode);
       setRoomCode('');
     }
   };
@@ -222,22 +220,12 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile, onLeaderboard,
       {mode === 'create' && (
         <TerminalCard title={t('hostNewGame')} className="w-full max-w-md">
           <div className="space-y-4">
-            <div className="space-y-2 text-center">
-              <Label htmlFor="player-name" className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[12px]">{t('playerName')}</Label>
-              <Input
-                id="player-name"
-                value={playerName}
-                onChange={(e) => setPlayerName(e.target.value)}
-                placeholder={t('enterYourName')}
-                className="uppercase"
-                maxLength={20}
-                data-testid="input-player-name"
-              />
+            <div className="space-y-2 text-center text-sm text-muted-foreground">
+              <p>Playing as: <span className="text-primary font-bold font-mono">{user?.username || 'USER'}</span></p>
             </div>
             <div className="flex gap-2">
               <NeonButton 
                 onClick={handleCreateRoom}
-                disabled={!playerName.trim()}
                 data-testid="button-confirm-create"
                 className="flex-1"
               >
