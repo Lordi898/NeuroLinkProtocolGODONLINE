@@ -280,6 +280,267 @@
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* ===== FUTURISTA STYLE MODE ===== */
+/* FUTURISTA - Dark Theme */
+[data-style="futurista"][data-theme="dark"],
+[data-style="futurista"]:root {
+  --button-outline: rgba(0, 150, 255, .20);
+  --badge-outline: rgba(0, 150, 255, .10);
+  --elevate-1: rgba(0, 150, 255, .05);
+  --elevate-2: rgba(0, 150, 255, .12);
+  --background: 200 100% 5%;
+  --foreground: 185 100% 50%;
+  --border: 185 100% 20%;
+  --card: 200 100% 8%;
+  --card-foreground: 185 100% 50%;
+  --card-border: 185 100% 25%;
+  --sidebar: 200 100% 6%;
+  --sidebar-foreground: 185 100% 50%;
+  --sidebar-border: 185 100% 20%;
+  --sidebar-primary: 185 100% 50%;
+  --sidebar-primary-foreground: 0 0% 0%;
+  --sidebar-accent: 280 100% 55%;
+  --sidebar-accent-foreground: 0 0% 0%;
+  --sidebar-ring: 185 100% 50%;
+  --popover: 200 100% 8%;
+  --popover-foreground: 185 100% 50%;
+  --popover-border: 185 100% 25%;
+  --primary: 185 100% 50%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 280 100% 55%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 200 50% 20%;
+  --muted-foreground: 185 100% 40%;
+  --accent: 280 100% 55%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 200 100% 12%;
+  --ring: 185 100% 50%;
+  --chart-1: 185 100% 50%;
+  --chart-2: 280 100% 55%;
+  --chart-3: 0 100% 50%;
+  --chart-4: 60 100% 50%;
+  --chart-5: 300 100% 50%;
+  --font-sans: 'Space Mono', monospace;
+  --font-serif: 'Space Mono', monospace;
+  --font-mono: 'Space Mono', monospace;
+}
+
+/* FUTURISTA - Normal Theme */
+[data-style="futurista"][data-theme="normal"] {
+  --button-outline: rgba(0, 150, 255, .20);
+  --badge-outline: rgba(0, 150, 255, .10);
+  --elevate-1: rgba(0, 150, 255, .05);
+  --elevate-2: rgba(0, 150, 255, .12);
+  --background: 0 0% 98%;
+  --foreground: 185 100% 35%;
+  --border: 185 50% 85%;
+  --card: 0 0% 100%;
+  --card-foreground: 185 100% 35%;
+  --card-border: 185 50% 88%;
+  --sidebar: 0 0% 97%;
+  --sidebar-foreground: 185 100% 35%;
+  --sidebar-border: 185 50% 85%;
+  --sidebar-primary: 185 100% 45%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 280 100% 50%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 185 100% 45%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 185 100% 35%;
+  --popover-border: 185 50% 88%;
+  --primary: 185 100% 45%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 280 100% 50%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 185 20% 85%;
+  --muted-foreground: 185 80% 40%;
+  --accent: 280 100% 50%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 185 30% 88%;
+  --ring: 185 100% 45%;
+  --chart-1: 185 100% 45%;
+  --chart-2: 280 100% 50%;
+  --chart-3: 0 84% 60%;
+  --chart-4: 60 100% 50%;
+  --chart-5: 300 100% 50%;
+}
+
+/* FUTURISTA - Light Theme */
+[data-style="futurista"][data-theme="light"] {
+  --button-outline: rgba(0, 150, 255, .20);
+  --badge-outline: rgba(0, 150, 255, .10);
+  --elevate-1: rgba(0, 150, 255, .05);
+  --elevate-2: rgba(0, 150, 255, .12);
+  --background: 185 60% 92%;
+  --foreground: 0 0% 8%;
+  --border: 185 40% 78%;
+  --card: 185 60% 95%;
+  --card-foreground: 0 0% 8%;
+  --card-border: 185 40% 82%;
+  --sidebar: 185 50% 93%;
+  --sidebar-foreground: 0 0% 8%;
+  --sidebar-border: 185 40% 78%;
+  --sidebar-primary: 185 100% 40%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 280 100% 45%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 185 100% 40%;
+  --popover: 185 60% 95%;
+  --popover-foreground: 0 0% 8%;
+  --popover-border: 185 40% 82%;
+  --primary: 185 100% 40%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 280 100% 45%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 185 30% 85%;
+  --muted-foreground: 185 80% 35%;
+  --accent: 280 100% 45%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 185 40% 85%;
+  --ring: 185 100% 40%;
+  --chart-1: 185 100% 40%;
+  --chart-2: 280 100% 45%;
+  --chart-3: 0 100% 50%;
+  --chart-4: 60 100% 50%;
+  --chart-5: 120 100% 40%;
+}
+
+/* ===== RETRO STYLE MODE ===== */
+/* RETRO - Dark Theme (80s Arcade) */
+[data-style="retro"][data-theme="dark"] {
+  --button-outline: rgba(255, 0, 255, .20);
+  --badge-outline: rgba(255, 0, 255, .10);
+  --elevate-1: rgba(255, 0, 255, .05);
+  --elevate-2: rgba(255, 0, 255, .12);
+  --background: 270 80% 8%;
+  --foreground: 280 100% 55%;
+  --border: 280 100% 35%;
+  --card: 270 80% 12%;
+  --card-foreground: 280 100% 55%;
+  --card-border: 280 100% 40%;
+  --sidebar: 270 80% 10%;
+  --sidebar-foreground: 280 100% 55%;
+  --sidebar-border: 280 100% 35%;
+  --sidebar-primary: 280 100% 55%;
+  --sidebar-primary-foreground: 0 0% 0%;
+  --sidebar-accent: 40 100% 50%;
+  --sidebar-accent-foreground: 0 0% 0%;
+  --sidebar-ring: 280 100% 55%;
+  --popover: 270 80% 12%;
+  --popover-foreground: 280 100% 55%;
+  --popover-border: 280 100% 40%;
+  --primary: 280 100% 55%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 40 100% 50%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 270 60% 20%;
+  --muted-foreground: 280 100% 50%;
+  --accent: 40 100% 50%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 100% 55%;
+  --destructive-foreground: 0 0% 0%;
+  --input: 270 80% 18%;
+  --ring: 280 100% 55%;
+  --chart-1: 280 100% 55%;
+  --chart-2: 40 100% 50%;
+  --chart-3: 0 100% 55%;
+  --chart-4: 60 100% 50%;
+  --chart-5: 300 100% 50%;
+  --font-sans: 'Press Start 2P', cursive;
+  --font-serif: 'Press Start 2P', cursive;
+  --font-mono: 'Press Start 2P', cursive;
+}
+
+/* RETRO - Normal Theme */
+[data-style="retro"][data-theme="normal"] {
+  --button-outline: rgba(255, 0, 255, .20);
+  --badge-outline: rgba(255, 0, 255, .10);
+  --elevate-1: rgba(255, 0, 255, .05);
+  --elevate-2: rgba(255, 0, 255, .12);
+  --background: 0 0% 95%;
+  --foreground: 270 100% 30%;
+  --border: 270 100% 60%;
+  --card: 0 0% 100%;
+  --card-foreground: 270 100% 30%;
+  --card-border: 270 100% 65%;
+  --sidebar: 0 0% 96%;
+  --sidebar-foreground: 270 100% 30%;
+  --sidebar-border: 270 100% 60%;
+  --sidebar-primary: 280 100% 40%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 40 100% 45%;
+  --sidebar-accent-foreground: 0 0% 0%;
+  --sidebar-ring: 280 100% 40%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 270 100% 30%;
+  --popover-border: 270 100% 65%;
+  --primary: 280 100% 40%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 40 100% 45%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 270 20% 85%;
+  --muted-foreground: 270 100% 35%;
+  --accent: 40 100% 45%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 270 20% 88%;
+  --ring: 280 100% 40%;
+  --chart-1: 280 100% 40%;
+  --chart-2: 40 100% 45%;
+  --chart-3: 0 100% 50%;
+  --chart-4: 60 100% 50%;
+  --chart-5: 300 100% 50%;
+}
+
+/* RETRO - Light Theme */
+[data-style="retro"][data-theme="light"] {
+  --button-outline: rgba(255, 0, 255, .20);
+  --badge-outline: rgba(255, 0, 255, .10);
+  --elevate-1: rgba(255, 0, 255, .05);
+  --elevate-2: rgba(255, 0, 255, .12);
+  --background: 280 40% 88%;
+  --foreground: 0 0% 5%;
+  --border: 280 40% 72%;
+  --card: 280 40% 92%;
+  --card-foreground: 0 0% 5%;
+  --card-border: 280 40% 75%;
+  --sidebar: 280 30% 90%;
+  --sidebar-foreground: 0 0% 5%;
+  --sidebar-border: 280 40% 72%;
+  --sidebar-primary: 280 100% 45%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 40 100% 50%;
+  --sidebar-accent-foreground: 0 0% 0%;
+  --sidebar-ring: 280 100% 45%;
+  --popover: 280 40% 92%;
+  --popover-foreground: 0 0% 5%;
+  --popover-border: 280 40% 75%;
+  --primary: 280 100% 45%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 40 100% 50%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 280 20% 80%;
+  --muted-foreground: 280 80% 35%;
+  --accent: 40 100% 50%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 100% 55%;
+  --destructive-foreground: 0 0% 0%;
+  --input: 280 30% 85%;
+  --ring: 280 100% 45%;
+  --chart-1: 280 100% 45%;
+  --chart-2: 40 100% 50%;
+  --chart-3: 0 100% 55%;
+  --chart-4: 60 100% 50%;
+  --chart-5: 120 100% 40%;
+}
+
 @layer base {
   * {
     @apply border-border;
