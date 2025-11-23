@@ -11,7 +11,7 @@ interface ProfileProps {
 }
 
 export function Profile({ onBack }: ProfileProps) {
-  const { profile, setCurrentAvatar, isUnlocked } = useProgression();
+  const { profile, setCurrentAvatar, setCurrentTheme, isUnlocked, isThemeUnlocked } = useProgression();
   const { t } = useLanguage();
   const [selectedTab, setSelectedTab] = useState<'avatars' | 'themes'>('avatars');
 
@@ -115,24 +115,33 @@ export function Profile({ onBack }: ProfileProps) {
         {selectedTab === 'themes' && (
           <div className="grid grid-cols-3 gap-4">
             {['hacker', 'futurista', 'retro', 'matrix-retro', 'obsidian-lux', 'quantum-divinity'].map(themeId => {
-              const unlocked = profile.unlockedThemes.includes(themeId);
+              const unlocked = isThemeUnlocked(themeId);
+              const isSelected = profile.currentTheme === themeId;
               const conditions: Record<string, string> = {
                 'matrix-retro': 'Win Streak 3+',
                 'obsidian-lux': 'Win as Impostor',
                 'quantum-divinity': 'Impostor Streak 3+',
               };
               return (
-                <div
+                <button
                   key={themeId}
-                  className={`p-4 border text-center ${unlocked ? 'border-primary bg-primary/10' : 'border-muted opacity-50'}`}
+                  onClick={() => unlocked && setCurrentTheme(themeId)}
+                  disabled={!unlocked}
+                  className={`p-4 border text-center transition-all cursor-pointer ${
+                    isSelected
+                      ? 'border-primary bg-primary/20'
+                      : unlocked
+                        ? 'border-border hover:border-primary'
+                        : 'border-muted opacity-50 cursor-not-allowed'
+                  }`}
                   data-testid={`theme-${themeId}`}
                 >
                   <p className="text-xs font-bold uppercase mb-2">{themeId}</p>
                   {!unlocked && conditions[themeId] && (
                     <p className="text-[10px] text-muted-foreground">{conditions[themeId]}</p>
                   )}
-                  {unlocked && <Trophy size={16} className="mx-auto text-secondary" />}
-                </div>
+                  {unlocked && isSelected && <Trophy size={16} className="mx-auto text-secondary" />}
+                </button>
               );
             })}
           </div>

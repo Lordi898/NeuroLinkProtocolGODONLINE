@@ -22,6 +22,16 @@ import { type Player } from "@/components/PlayerList";
 
 const gameController = new GameController();
 
+function ThemeApplier() {
+  const { profile } = useProgression();
+  
+  useEffect(() => {
+    document.body.setAttribute('data-playable-theme', profile.currentTheme);
+  }, [profile.currentTheme]);
+
+  return null;
+}
+
 function App() {
   const [gameState, setGameState] = useState<GameState>(gameController.getState());
   const { toast } = useToast();
@@ -143,6 +153,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <ProgressionProvider>
+          <ThemeApplier />
           <TooltipProvider>
             <div className="min-h-screen bg-background text-foreground">
               {gameState.phase === 'join' && (

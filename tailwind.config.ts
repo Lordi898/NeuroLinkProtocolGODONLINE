@@ -81,11 +81,17 @@ export default {
           busy: "rgb(239 68 68)",
           offline: "rgb(156 163 175)",
         },
+        theme: {
+          bg: "var(--theme-bg, transparent)",
+          text: "var(--theme-text, currentColor)",
+          accent: "var(--theme-accent, currentColor)",
+        },
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
         serif: ["var(--font-serif)"],
         mono: ["var(--font-mono)"],
+        theme: ["var(--theme-font, var(--font-sans))"],
       },
       keyframes: {
         "accordion-down": {
