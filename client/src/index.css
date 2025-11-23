@@ -494,6 +494,19 @@
 [data-style="retro"][data-theme="dark"] input,
 [data-style="retro"][data-theme="dark"] textarea {
   font-family: 'Press Start 2P', cursive;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+[data-style="retro"][data-theme="dark"] * {
+  animation: retro-low-fps 0.1s steps(2, end) infinite;
+  animation-delay: var(--delay-offset, 0ms);
+}
+
+[data-style="retro"][data-theme="dark"] button:hover,
+[data-style="retro"][data-theme="dark"] button:active,
+[data-style="retro"][data-theme="dark"] input:focus {
+  animation: retro-pulse-pixel 0.15s steps(3, end) infinite !important;
 }
 
 /* RETRO - Normal Theme */
@@ -573,6 +586,19 @@
 [data-style="retro"][data-theme="normal"] input,
 [data-style="retro"][data-theme="normal"] textarea {
   font-family: 'Press Start 2P', cursive;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+[data-style="retro"][data-theme="normal"] * {
+  animation: retro-low-fps 0.1s steps(2, end) infinite;
+  animation-delay: var(--delay-offset, 0ms);
+}
+
+[data-style="retro"][data-theme="normal"] button:hover,
+[data-style="retro"][data-theme="normal"] button:active,
+[data-style="retro"][data-theme="normal"] input:focus {
+  animation: retro-pulse-pixel 0.15s steps(3, end) infinite !important;
 }
 
 /* RETRO - Light Theme */
@@ -1130,6 +1156,36 @@
     75% {
       transform: translateY(5px) skewY(-1deg);
       opacity: 0.95;
+    }
+  }
+
+  @keyframes retro-low-fps {
+    0%, 33% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    34%, 66% {
+      opacity: 0.7;
+      transform: translate(1px, 0px);
+    }
+    67%, 100% {
+      opacity: 0.95;
+      transform: translate(-1px, 1px);
+    }
+  }
+
+  @keyframes retro-pulse-pixel {
+    0%, 25% {
+      filter: brightness(1) drop-shadow(0 0 2px currentColor);
+    }
+    26%, 50% {
+      filter: brightness(1.2) drop-shadow(0 0 4px currentColor);
+    }
+    51%, 75% {
+      filter: brightness(0.9) drop-shadow(0 0 1px currentColor);
+    }
+    76%, 100% {
+      filter: brightness(1.15) drop-shadow(0 0 3px currentColor);
     }
   }
 
