@@ -498,11 +498,6 @@
   image-rendering: crisp-edges;
 }
 
-[data-style="retro"][data-theme="dark"] * {
-  animation: retro-low-fps 0.1s steps(2, end) infinite;
-  animation-delay: var(--delay-offset, 0ms);
-}
-
 [data-style="retro"][data-theme="dark"] button:hover,
 [data-style="retro"][data-theme="dark"] button:active,
 [data-style="retro"][data-theme="dark"] input:focus {
@@ -588,11 +583,6 @@
   font-family: 'Press Start 2P', cursive;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-}
-
-[data-style="retro"][data-theme="normal"] * {
-  animation: retro-low-fps 0.1s steps(2, end) infinite;
-  animation-delay: var(--delay-offset, 0ms);
 }
 
 [data-style="retro"][data-theme="normal"] button:hover,
