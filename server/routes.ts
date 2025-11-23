@@ -1,6 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { GoogleGenAI } from '@google/genai';
+import { loginUser, registerUser } from './auth';
+import { storage } from './storage';
 
 interface WordData {
   word: string;
@@ -113,6 +115,89 @@ Do not include any other text.`;
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Auth Routes
+  app.post('/api/auth/login', async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const user = await loginUser(username, password);
+      res.json(user);
+    } catch (error) {
+      console.error('[AUTH] Login error:', error);
+      res.status(401).json({ message: error instanceof Error ? error.message : 'Login failed' });
+    }
+  });
+
+  app.post('/api/auth/signup', async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const user = await registerUser(username, password);
+      const { password: _, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error('[AUTH] Signup error:', error);
+      res.status(400).json({ message: error instanceof Error ? error.message : 'Signup failed' });
+    }
+  });
+
+  // Leaderboard Routes
+  app.get('/api/leaderboard/wins', async (req, res) => {
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
+      const leaderboard = await storage.getLeaderboardByWins(limit);
+      res.json(leaderboard);
+    } catch (error) {
+      console.error('[LEADERBOARD] Error:', error);
+      res.status(500).json({ message: 'Failed to fetch leaderboard' });
+    }
+  });
+
+  app.get('/api/leaderboard/impostor-wins', async (req, res) => {
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
+      const leaderboard = await storage.getLeaderboardByImpostorWins(limit);
+      res.json(leaderboard);
+    } catch (error) {
+      console.error('[LEADERBOARD] Error:', error);
+      res.status(500).json({ message: 'Failed to fetch leaderboard' });
+    }
+  });
+
+  // Match History Route
+  app.get('/api/users/:userId/matches', async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
+      const matches = await storage.getUserMatches(userId, limit);
+      res.json(matches);
+    } catch (error) {
+      console.error('[MATCHES] Error:', error);
+      res.status(500).json({ message: 'Failed to fetch matches' });
+    }
+  });
+
+  // Friends Routes
+  app.post('/api/friends/add', async (req, res) => {
+    try {
+      const { userId, friendId } = req.body;
+      const friend = await storage.addFriend(userId, friendId);
+      res.json(friend);
+    } catch (error) {
+      console.error('[FRIENDS] Error:', error);
+      res.status(400).json({ message: 'Failed to add friend' });
+    }
+  });
+
+  app.get('/api/friends/:userId', async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const friends = await storage.getFriends(userId);
+      res.json(friends);
+    } catch (error) {
+      console.error('[FRIENDS] Error:', error);
+      res.status(500).json({ message: 'Failed to fetch friends' });
+    }
+  });
+
   app.post('/api/generate-word', async (req, res) => {
     try {
       const { language = 'en' } = req.body;

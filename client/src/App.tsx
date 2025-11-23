@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { LanguageProvider } from "@/lib/languageContext";
 import { ProgressionProvider, useProgression } from "@/lib/progressionContext";
+import { AuthProvider, useAuth } from "@/lib/authContext";
+import { LoginScreen } from "@/components/game/LoginScreen";
 import { JoinScreen } from "@/components/game/JoinScreen";
 import { LobbyScreen } from "@/components/game/LobbyScreen";
 import { RoleRevealScreen } from "@/components/game/RoleRevealScreen";
@@ -15,6 +17,8 @@ import { ObligatoryVotingScreen } from "@/components/game/ObligatoryVotingScreen
 import { VotingScreen } from "@/components/game/VotingScreen";
 import { VotingResultsScreen } from "@/components/game/VotingResultsScreen";
 import { GameOverScreen } from "@/components/game/GameOverScreen";
+import { LeaderboardScreen } from "@/components/game/LeaderboardScreen";
+import { MatchHistoryScreen } from "@/components/game/MatchHistoryScreen";
 import { Profile } from "@/pages/Profile";
 import { GameController } from "@/lib/gameController";
 import { type GameState } from "@/lib/gameState";
@@ -32,9 +36,31 @@ function ThemeApplier() {
   return null;
 }
 
-function App() {
+function AppContent() {
+  const { user, loading: authLoading } = useAuth();
   const [gameState, setGameState] = useState<GameState>(gameController.getState());
   const { toast } = useToast();
+  const [appPhase, setAppPhase] = useState<'auth' | 'game'>('auth');
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center scanline">
+        <div className="text-xl font-mono text-primary">CONNECTING...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginScreen onLoginSuccess={() => setAppPhase('game')} />;
+  }
+
+  if (appPhase === 'game' && gameState.phase === 'leaderboard') {
+    return <LeaderboardScreen onBack={() => setGameState(prev => ({ ...prev, phase: 'join' }))} />;
+  }
+
+  if (appPhase === 'game' && gameState.phase === 'match-history') {
+    return <MatchHistoryScreen onBack={() => setGameState(prev => ({ ...prev, phase: 'join' }))} />;
+  }
 
   useEffect(() => {
     gameController.onStateChange((state) => {
@@ -322,4 +348,10 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
