@@ -586,6 +586,37 @@
     letter-spacing: 0.15em;
     text-transform: uppercase;
     font-weight: 900;
+    text-shadow: 0 0 20px hsl(190 100% 52%), 0 0 40px hsl(260 90% 65%);
+  }
+
+  /* FUTURISTA specific styling */
+  [data-style="futurista"] .scanline::before {
+    background: linear-gradient(90deg, transparent, hsl(190 100% 52% / 0.6), transparent);
+    height: 1px;
+  }
+
+  [data-style="futurista"] .scanline {
+    position: relative;
+  }
+
+  [data-style="futurista"] button,
+  [data-style="futurista"] [role="button"] {
+    position: relative;
+    overflow: visible;
+  }
+
+  [data-style="futurista"] button::before,
+  [data-style="futurista"] [role="button"]::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, hsl(190 100% 52% / 0.2), hsl(260 90% 65% / 0.2));
+    border-radius: inherit;
+    z-index: -1;
+    filter: blur(1px);
   }
 
   /* RETRO Styles */
@@ -599,6 +630,22 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
     font-weight: 700;
+    line-height: 1.3;
+  }
+
+  /* RETRO ensure text stays in bounds */
+  [data-style="retro"] * {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  [data-style="retro"] button,
+  [data-style="retro"] input,
+  [data-style="retro"] textarea,
+  [data-style="retro"] select {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.75rem;
+    padding: 8px 12px;
   }
 }
 
@@ -833,59 +880,125 @@
   }
 
   /* ===== FUTURISTA ANIMATIONS ===== */
-  @keyframes futuristic-glow {
+  @keyframes holographic-glow {
     0%, 100% {
-      text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+      text-shadow: 
+        0 0 10px hsl(190 100% 52%),
+        0 0 20px hsl(190 100% 52%),
+        0 0 30px hsl(260 90% 65%),
+        0 0 40px hsl(260 90% 65%);
       filter: brightness(1);
     }
     50% {
-      text-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 45px currentColor, 0 0 60px currentColor;
-      filter: brightness(1.2);
+      text-shadow: 
+        0 0 20px hsl(190 100% 52%),
+        0 0 40px hsl(190 100% 52%),
+        0 0 60px hsl(260 90% 65%),
+        0 0 80px hsl(260 90% 65%),
+        0 0 100px hsl(190 100% 52% / 0.5);
+      filter: brightness(1.3);
     }
   }
 
-  @keyframes laser-beam {
+  @keyframes pulse-ring {
     0% {
-      clip-path: polygon(0% 50%, 0% 50%, 0% 50%, 0% 50%);
-    }
-    100% {
-      clip-path: polygon(0% 50%, 100% 45%, 100% 55%, 0% 50%);
-    }
-  }
-
-  @keyframes float-up {
-    0% {
-      transform: translateY(0px);
-      opacity: 0;
+      box-shadow: 0 0 0 0 hsl(190 100% 52% / 0.7),
+                  0 0 0 0 hsl(260 90% 65% / 0.5);
+      transform: scale(1);
     }
     50% {
-      opacity: 1;
+      box-shadow: 0 0 0 10px hsl(190 100% 52% / 0),
+                  0 0 0 20px hsl(260 90% 65% / 0);
+      transform: scale(1.05);
     }
     100% {
-      transform: translateY(-20px);
-      opacity: 0;
+      box-shadow: 0 0 0 0 hsl(190 100% 52% / 0),
+                  0 0 0 0 hsl(260 90% 65% / 0);
+      transform: scale(1);
     }
   }
 
-  @keyframes cyber-flicker {
+  @keyframes digital-scan {
+    0% {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+    }
+    50% {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
+    }
+    100% {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+  }
+
+  @keyframes data-stream {
     0%, 100% {
+      transform: translateY(0) skewY(0deg);
       opacity: 1;
     }
-    10%, 20%, 30%, 50%, 70%, 90% {
+    25% {
+      transform: translateY(-5px) skewY(1deg);
       opacity: 0.95;
     }
-    15%, 25%, 35%, 55%, 75%, 85% {
+    50% {
+      transform: translateY(0) skewY(0deg);
       opacity: 1;
+    }
+    75% {
+      transform: translateY(5px) skewY(-1deg);
+      opacity: 0.95;
+    }
+  }
+
+  @keyframes neon-flare {
+    0%, 100% {
+      filter: drop-shadow(0 0 5px hsl(190 100% 52%));
+    }
+    50% {
+      filter: drop-shadow(0 0 15px hsl(190 100% 52%)) drop-shadow(0 0 30px hsl(260 90% 65%));
     }
   }
 
   [data-style="futurista"] .glitch-effect {
-    animation: cyber-flicker 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+    animation: data-stream 0.5s ease-in-out infinite;
   }
 
-  [data-style="futurista"] .text-glow,
+  [data-style="futurista"] .text-glow {
+    animation: holographic-glow 3s ease-in-out infinite;
+  }
+
   [data-style="futurista"] .text-glow-green {
-    animation: futuristic-glow 2s ease-in-out infinite;
+    animation: holographic-glow 3s ease-in-out infinite;
+  }
+
+  [data-style="futurista"] .glow-pulse {
+    animation: pulse-ring 2s ease-out infinite;
+  }
+
+  [data-style="futurista"] .animate-pulse {
+    animation: neon-flare 1.5s ease-in-out infinite !important;
+  }
+
+  /* FUTURISTA card styles */
+  [data-style="futurista"] .card,
+  [data-style="futurista"] [class*="Card"] {
+    border: 2px solid hsl(190 100% 52%);
+    box-shadow: 
+      inset 0 0 10px hsl(190 100% 52% / 0.2),
+      0 0 20px hsl(190 100% 52% / 0.3),
+      0 0 40px hsl(260 90% 65% / 0.2);
+    position: relative;
+  }
+
+  [data-style="futurista"] .card::before,
+  [data-style="futurista"] [class*="Card"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(190 100% 52%), transparent);
+    animation: neon-flare 2s ease-in-out infinite;
   }
 
   /* ===== RETRO ANIMATIONS ===== */
@@ -898,30 +1011,12 @@
     }
   }
 
-  @keyframes low-fps {
-    0% {
-      transform: translateY(0px) scaleY(0.98);
+  @keyframes retro-flicker-frame {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100% {
+      opacity: 1;
     }
-    14% {
-      transform: translateY(-1px) scaleY(0.99);
-    }
-    28% {
-      transform: translateY(0px) scaleY(0.98);
-    }
-    42% {
-      transform: translateY(-1px) scaleY(0.99);
-    }
-    56% {
-      transform: translateY(0px) scaleY(0.98);
-    }
-    70% {
-      transform: translateY(-1px) scaleY(0.99);
-    }
-    84% {
-      transform: translateY(0px) scaleY(0.98);
-    }
-    100% {
-      transform: translateY(0px) scaleY(0.98);
+    5%, 25%, 45%, 65%, 85% {
+      opacity: 0.85;
     }
   }
 
@@ -955,7 +1050,7 @@
   }
 
   [data-style="retro"] .glitch-effect {
-    animation: chromatic-aberration 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite, low-fps 0.5s steps(8, end) infinite;
+    animation: chromatic-aberration 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
   }
 
   [data-style="retro"] .text-glow,
@@ -965,12 +1060,12 @@
   }
 
   [data-style="retro"] .glow-pulse {
-    animation: arcade-flash 0.8s ease-in-out infinite, low-fps 0.5s steps(8, end) infinite;
+    animation: arcade-flash 0.8s ease-in-out infinite;
     box-shadow: 2px 2px 0px currentColor, 4px 4px 0px rgba(180, 100, 255, 0.3) !important;
   }
 
   [data-style="retro"] .animate-pulse {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite, low-fps 0.5s steps(8, end) infinite;
+    animation: retro-flicker-frame 0.6s steps(10, end) infinite !important;
   }
 
   /* RETRO specific glow colors */
