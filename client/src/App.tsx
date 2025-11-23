@@ -216,6 +216,7 @@ function App() {
                   impostorPlayer={impostorPlayer}
                   onPlayAgain={handlePlayAgain}
                   onBackToLobby={handleBackToLobby}
+                  isImpostor={isImpostor}
                 />
               )}
             </div>

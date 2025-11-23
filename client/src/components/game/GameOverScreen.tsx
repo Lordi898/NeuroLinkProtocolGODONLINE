@@ -1,23 +1,33 @@
+import { useEffect } from 'react';
 import { GlitchText } from '../GlitchText';
 import { NeonButton } from '../NeonButton';
 import { TerminalCard } from '../TerminalCard';
 import { PlayerAvatar } from '../PlayerAvatar';
 import { type Player } from '../PlayerList';
 import { cn } from '@/lib/utils';
+import { useGameOverProgression } from '@/lib/useGameOverProgression';
 
 interface GameOverScreenProps {
   winner: 'hackers' | 'impostor';
   impostorPlayer: Player;
   onPlayAgain: () => void;
   onBackToLobby: () => void;
+  isImpostor?: boolean;
 }
 
 export function GameOverScreen({
   winner,
   impostorPlayer,
   onPlayAgain,
-  onBackToLobby
+  onBackToLobby,
+  isImpostor = false
 }: GameOverScreenProps) {
+  const { handleGameOver } = useGameOverProgression();
+
+  useEffect(() => {
+    // Award XP and check for theme unlocks when game ends
+    handleGameOver(winner, isImpostor);
+  }, [winner, isImpostor, handleGameOver]);
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center gap-8">
       <div className="text-center space-y-6">
