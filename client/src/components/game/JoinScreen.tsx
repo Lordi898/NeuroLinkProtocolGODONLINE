@@ -7,17 +7,30 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '@/lib/languageContext';
+import { useProgression } from '@/lib/progressionContext';
 
 interface JoinScreenProps {
   onCreateRoom: (playerName: string) => void;
   onJoinRoom: (playerName: string, roomCode: string) => void;
+  onProfile?: () => void;
 }
 
-export function JoinScreen({ onCreateRoom, onJoinRoom }: JoinScreenProps) {
+export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile }: JoinScreenProps) {
   const [playerName, setPlayerName] = useState('');
   const [roomCode, setRoomCode] = useState('');
-  const [mode, setMode] = useState<'menu' | 'create' | 'join'>('menu');
+  const [adminCode, setAdminCode] = useState('');
+  const [mode, setMode] = useState<'menu' | 'create' | 'join' | 'admin'>('menu');
   const { language, setLanguage, theme, setTheme, styleMode, setStyleMode, t } = useLanguage();
+  const { profile } = useProgression();
+  const [isAdminMode, setIsAdminMode] = useState(false);
+
+  const handleAdminCode = () => {
+    if (adminCode === 'NEUROSPY2024') {
+      setIsAdminMode(true);
+      setMode('menu');
+      setAdminCode('');
+    }
+  };
 
   const handleCreateRoom = () => {
     if (playerName.trim()) {

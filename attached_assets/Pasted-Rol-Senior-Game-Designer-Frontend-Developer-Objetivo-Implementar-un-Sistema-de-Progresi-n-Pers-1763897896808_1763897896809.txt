@@ -1,0 +1,55 @@
+Rol: Senior Game Designer & Frontend Developer.
+Objetivo: Implementar un Sistema de Progresión Persistente usando localStorage. El sistema debe manejar Rangos, Avatars desbloqueables y Temas secretos basados en logros.
+ARQUITECTURA DE DATOS (PERFIL DE USUARIO)
+Crea un hook useProgression y un contexto asociado.
+Almacena en localStorage ('neurospy_profile') un objeto JSON con:
+xp: Puntos de experiencia acumulados (100xp por victoria, 50xp por jugar).
+rankLevel: Nivel actual (1 a 10).
+totalWins: Victorias totales.
+winStreak: Rachas de victorias consecutivas (general).
+impostorWinStreak: Rachas de victorias consecutivas jugadas exclusivamente como Impostor.
+unlockedAvatars: Array de IDs de avatares.
+unlockedThemes: Array de IDs de temas.
+currentAvatar: ID del avatar equipado.
+SISTEMA DE AVATARES (30 TOTALES)
+Implementa una colección de 30 avatares.
+Mecánica:
+Nivel 1 (Inicial): 10 Avatares desbloqueados por defecto. Diseño simple, colores planos, iconos básicos.
+Nivel 2-5 (Intermedio): 10 Avatares desbloqueables. Diseño más complejo, degradados, estilo "Hacker".
+Nivel 6-10 (Élite): 10 Avatares desbloqueables. Estilo "Legendario", bordes brillantes, efectos animados (CSS glow).
+Implementación:
+Si usas generación de imagen por IA, usa prompts distintos según el tier.
+Si usas iconos/SVGs (recomendado para consistencia), usa lucide-react con contenedores estilizados que varíen en complejidad según el nivel.
+UI: Crea una pantalla "Perfil / Armería" donde se vean los 30 huecos. Los bloqueados deben tener un candado y decir "Desbloquea en Nivel X".
+NUEVOS TEMAS DESBLOQUEABLES (LOGROS)
+Añade lógica en ThemeContext para manejar estos temas especiales que solo aparecen si están en unlockedThemes.
+A. Tema "Matrix Retro" (Condición: winStreak >= 3)
+Estilo: Fondo negro puro. Texto verde terminal brillante.
+Efecto: Lluvia de código (Digital Rain) sutil en el fondo usando un canvas o CSS. Fuente pixelada obligatoria.
+B. Tema "Obsidian Lux" (Condición: impostorWins >= 1)
+Concepto: Elegancia pura, Mafia, High-Tech Luxury.
+Paleta: Fondo Gris Carbón Mate (#1a1a1a), Acentos en Oro Metálico (#d4af37), Texto Blanco Perla.
+Vibe: Bordes finos, fuentes Serif modernas (como 'Playfair Display' o similar), sombras suaves doradas.
+C. Tema "Quantum Divinity" (Condición: impostorWinStreak >= 3)
+Concepto: El nivel máximo. Trascendencia.
+Paleta: Fondo Blanco Hielo / Plata muy claro. Acentos Holográficos (Gradientes Cian-Magenta-Púrpura suaves).
+Efecto: Glassmorphism extremo (todo transparente/borroso). Bordes con gradiente animado (RGB gamer pero elegante).
+Vibe: Futurismo utópico, limpio, "Apple del año 3000".
+LÓGICA DE JUEGO (GAME OVER HANDLER)
+Modifica el componente GameOver o la función de final de partida:
+Calcula el resultado.
+Llama a addXp(amount).
+Actualiza las rachas (winStreak). Importante: Si pierde, winStreak vuelve a 0.
+Check de Desbloqueos:
+Si winStreak === 3 -> Desbloquea 'matrix-retro'. Muestra modal: "¡NUEVO TEMA: MATRIX!"
+Si ganó como impostor -> Desbloquea 'obsidian-lux'.
+Si ganó como impostor Y impostorWinStreak === 3 -> Desbloquea 'quantum-divinity'.
+Sube de nivel si corresponde y desbloquea los avatares de ese nivel.
+TAREA:
+Genera el código para el ProgressionContext, actualiza el ThemeContext con los nuevos estilos visuales y crea la pantalla de perfil para seleccionar avatares y temas.
+MODO ADMIN:
+Quiero que en la interfaz de JOIN añadas un recuadro para introducir texto, y arriba del mismo dirá:
+Código de Admin, y esto será un sitio en el cual si yo (el creador) pongo un código específico entonces se activara un modo en el cual tengo todo desbloqueado, puedo expulsar a la gente incluso si no he creado yo la partida, tengo todos los avatares y temas desbloqueados, y puedo jugar una partida sin el mínimo de 3 personas, solo yo. También, quiero que lo que hay de los botones de JOIN, LOBBY, REVEAL, PLAY, VOTE, END, sean solo para el modo admin, que se elimine para los jugadores normales y solo se ponga para el admin que ponga el codigo. El código de admin será completamente secreto e imposible de hackear, es un secreto, toma medidas de seguridad para que nadie lo vea si mira el código. Codigo admin: lordi
+
+
+Haz esto de manera paralela, modular, y paso a paso, esfuerzate al máximo y no escatimes en recursos.
