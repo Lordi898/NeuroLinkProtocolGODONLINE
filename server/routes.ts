@@ -114,87 +114,150 @@ Do not include any other text.`;
   }
 }
 
+// Rate limiting middleware
+const loginAttempts = new Map<string, { count: number; resetTime: number }>();
+function checkRateLimit(key: string, maxAttempts: number = 5, windowMs: number = 900000): boolean {
+  const now = Date.now();
+  const attempt = loginAttempts.get(key);
+  
+  if (!attempt || now > attempt.resetTime) {
+    loginAttempts.set(key, { count: 1, resetTime: now + windowMs });
+    return true;
+  }
+  
+  if (attempt.count < maxAttempts) {
+    attempt.count++;
+    return true;
+  }
+  
+  return false;
+}
+
+// Security headers middleware
+function addSecurityHeaders(req: any, res: any, next: any) {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'");
+  next();
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth Routes
+  // Apply security headers
+  app.use(addSecurityHeaders);
+
+  // Auth Routes with rate limiting
   app.post('/api/auth/login', async (req, res) => {
     try {
+      const clientIp = req.ip || 'unknown';
+      if (!checkRateLimit(`login:${clientIp}`, 5, 900000)) {
+        return res.status(429).json({ message: 'AUTH_FAILED' });
+      }
+
       const { username, password } = req.body;
+      if (typeof username !== 'string' || typeof password !== 'string') {
+        return res.status(400).json({ message: 'AUTH_FAILED' });
+      }
+
       const user = await loginUser(username, password);
       res.json(user);
     } catch (error) {
       console.error('[AUTH] Login error:', error);
-      res.status(401).json({ message: error instanceof Error ? error.message : 'Login failed' });
+      res.status(401).json({ message: 'AUTH_FAILED' });
     }
   });
 
   app.post('/api/auth/signup', async (req, res) => {
     try {
+      const clientIp = req.ip || 'unknown';
+      if (!checkRateLimit(`signup:${clientIp}`, 3, 900000)) {
+        return res.status(429).json({ message: 'AUTH_FAILED' });
+      }
+
       const { username, password } = req.body;
+      if (typeof username !== 'string' || typeof password !== 'string') {
+        return res.status(400).json({ message: 'AUTH_FAILED' });
+      }
+
       const user = await registerUser(username, password);
       const { password: _, ...userWithoutPassword } = user;
       res.json(userWithoutPassword);
     } catch (error) {
       console.error('[AUTH] Signup error:', error);
-      res.status(400).json({ message: error instanceof Error ? error.message : 'Signup failed' });
+      res.status(400).json({ message: 'AUTH_FAILED' });
     }
   });
 
-  // Leaderboard Routes
+  // Leaderboard Routes with input validation
   app.get('/api/leaderboard/wins', async (req, res) => {
     try {
-      const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
+      const limit = Math.max(1, Math.min(parseInt(req.query.limit as string) || 10, 100));
+      if (!Number.isInteger(limit)) throw new Error('Invalid limit');
       const leaderboard = await storage.getLeaderboardByWins(limit);
       res.json(leaderboard);
     } catch (error) {
       console.error('[LEADERBOARD] Error:', error);
-      res.status(500).json({ message: 'Failed to fetch leaderboard' });
+      res.status(400).json({ message: 'ERROR' });
     }
   });
 
   app.get('/api/leaderboard/impostor-wins', async (req, res) => {
     try {
-      const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
+      const limit = Math.max(1, Math.min(parseInt(req.query.limit as string) || 10, 100));
+      if (!Number.isInteger(limit)) throw new Error('Invalid limit');
       const leaderboard = await storage.getLeaderboardByImpostorWins(limit);
       res.json(leaderboard);
     } catch (error) {
       console.error('[LEADERBOARD] Error:', error);
-      res.status(500).json({ message: 'Failed to fetch leaderboard' });
+      res.status(400).json({ message: 'ERROR' });
     }
   });
 
-  // Match History Route
+  // Match History Route with validation
   app.get('/api/users/:userId/matches', async (req, res) => {
     try {
       const { userId } = req.params;
-      const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
+      if (typeof userId !== 'string' || userId.length < 1 || userId.length > 100) {
+        return res.status(400).json({ message: 'ERROR' });
+      }
+      const limit = Math.max(1, Math.min(parseInt(req.query.limit as string) || 10, 50));
+      if (!Number.isInteger(limit)) throw new Error('Invalid limit');
       const matches = await storage.getUserMatches(userId, limit);
       res.json(matches);
     } catch (error) {
       console.error('[MATCHES] Error:', error);
-      res.status(500).json({ message: 'Failed to fetch matches' });
+      res.status(400).json({ message: 'ERROR' });
     }
   });
 
-  // Friends Routes
+  // Friends Routes with validation
   app.post('/api/friends/add', async (req, res) => {
     try {
       const { userId, friendId } = req.body;
+      if (typeof userId !== 'string' || typeof friendId !== 'string' || userId.length < 1 || friendId.length < 1) {
+        return res.status(400).json({ message: 'ERROR' });
+      }
+      if (userId === friendId) return res.status(400).json({ message: 'ERROR' });
       const friend = await storage.addFriend(userId, friendId);
       res.json(friend);
     } catch (error) {
       console.error('[FRIENDS] Error:', error);
-      res.status(400).json({ message: 'Failed to add friend' });
+      res.status(400).json({ message: 'ERROR' });
     }
   });
 
   app.get('/api/friends/:userId', async (req, res) => {
     try {
       const { userId } = req.params;
+      if (typeof userId !== 'string' || userId.length < 1 || userId.length > 100) {
+        return res.status(400).json({ message: 'ERROR' });
+      }
       const friends = await storage.getFriends(userId);
       res.json(friends);
     } catch (error) {
       console.error('[FRIENDS] Error:', error);
-      res.status(500).json({ message: 'Failed to fetch friends' });
+      res.status(400).json({ message: 'ERROR' });
     }
   });
 

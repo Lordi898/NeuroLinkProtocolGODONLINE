@@ -3,7 +3,7 @@ import { storage } from './storage';
 import { type InsertUser } from '@shared/schema';
 
 export async function hashPassword(password: string): Promise<string> {
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(12);
   return bcrypt.hash(password, salt);
 }
 
@@ -13,17 +13,20 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 
 export async function registerUser(username: string, password: string) {
   // Validate input
-  if (!username || username.length < 3) {
-    throw new Error('Username must be at least 3 characters');
+  if (!username || typeof username !== 'string' || username.length < 3 || username.length > 50) {
+    throw new Error('INVALID_USERNAME');
   }
-  if (!password || password.length < 6) {
-    throw new Error('Password must be at least 6 characters');
+  if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+    throw new Error('INVALID_USERNAME');
+  }
+  if (!password || typeof password !== 'string' || password.length < 8 || password.length > 128) {
+    throw new Error('INVALID_PASSWORD');
   }
 
   // Check if user exists
-  const existingUser = await storage.getUserByUsername(username);
+  const existingUser = await storage.getUserByUsername(username.toLowerCase());
   if (existingUser) {
-    throw new Error('Username already exists');
+    throw new Error('AUTH_FAILED');
   }
 
   // Hash password
@@ -44,18 +47,18 @@ export async function registerUser(username: string, password: string) {
 }
 
 export async function loginUser(username: string, password: string) {
-  if (!username || !password) {
-    throw new Error('Username and password required');
+  if (!username || typeof username !== 'string' || !password || typeof password !== 'string') {
+    throw new Error('AUTH_FAILED');
   }
 
-  const user = await storage.getUserByUsername(username);
+  const user = await storage.getUserByUsername(username.toLowerCase());
   if (!user) {
-    throw new Error('Invalid credentials');
+    throw new Error('AUTH_FAILED');
   }
 
   const isValid = await verifyPassword(password, user.password);
   if (!isValid) {
-    throw new Error('Invalid credentials');
+    throw new Error('AUTH_FAILED');
   }
 
   // Don't return password

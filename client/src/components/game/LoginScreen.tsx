@@ -20,8 +20,24 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    // Validate inputs
     if (!username || !password) {
       setError('MISSING CREDENTIALS');
+      return;
+    }
+    
+    if (username.length < 3 || username.length > 50) {
+      setError('USERNAME INVALID');
+      return;
+    }
+    
+    if (password.length < 8 || password.length > 128) {
+      setError('PASSWORD INVALID');
+      return;
+    }
+    
+    if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+      setError('USERNAME INVALID');
       return;
     }
 
@@ -36,7 +52,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
       }
       onLoginSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'AUTH FAILED');
+      setError('AUTH FAILED');
     } finally {
       setLoading(false);
     }

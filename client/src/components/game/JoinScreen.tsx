@@ -25,12 +25,10 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile }: JoinScreenPr
   const [isAdminMode, setIsAdminMode] = useState(false);
 
   const handleAdminCode = () => {
-    if (adminCode === 'LORDI') {
-      setIsAdminMode(true);
-      activateAdminMode();
-      setMode('menu');
-      setAdminCode('');
-    }
+    // Admin code validation moved to backend for security
+    // Frontend no longer processes or validates admin codes
+    setMode('menu');
+    setAdminCode('');
   };
 
   const handleCreateRoom = () => {
