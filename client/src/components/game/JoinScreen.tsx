@@ -23,7 +23,7 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile }: JoinScreenPr
   const [isAdminMode, setIsAdminMode] = useState(false);
 
   const handleAdminCode = () => {
-    if (adminCode === 'NEUROSPY2024') {
+    if (adminCode === 'LORDI') {
       setIsAdminMode(true);
       setMode('menu');
       setAdminCode('');
