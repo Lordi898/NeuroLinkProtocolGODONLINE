@@ -273,6 +273,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Simple in-memory room storage
+  const rooms = new Map<string, { hostId: string; players: Set<string>; }>();
+
+  app.post('/api/rooms/create', (req, res) => {
+    try {
+      const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const hostId = Math.random().toString(36).substring(2, 15);
+      rooms.set(roomCode, { hostId, players: new Set([hostId]) });
+      res.json({ roomCode, playerId: hostId });
+    } catch (error) {
+      res.status(400).json({ message: 'ERROR' });
+    }
+  });
+
+  app.post('/api/rooms/join', (req, res) => {
+    try {
+      const { roomCode } = req.body;
+      const room = rooms.get(roomCode);
+      if (!room) return res.status(400).json({ message: 'ROOM_NOT_FOUND' });
+      
+      const playerId = Math.random().toString(36).substring(2, 15);
+      room.players.add(playerId);
+      res.json({ roomCode, playerId, hostId: room.hostId });
+    } catch (error) {
+      res.status(400).json({ message: 'ERROR' });
+    }
+  });
+
+  app.get('/api/rooms/:roomCode', (req, res) => {
+    try {
+      const { roomCode } = req.params;
+      const room = rooms.get(roomCode);
+      if (!room) return res.status(400).json({ message: 'ERROR' });
+      res.json({ playerCount: room.players.size });
+    } catch (error) {
+      res.status(400).json({ message: 'ERROR' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

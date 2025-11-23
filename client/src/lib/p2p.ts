@@ -50,44 +50,20 @@ export class P2PManager {
   async createRoom(playerName: string): Promise<string> {
     this.localPlayerName = playerName;
     this.isHost = true;
-    this.roomCode = this.generateRoomCode();
 
-    return new Promise((resolve, reject) => {
-      try {
-        this.peer = new Peer(this.roomCode, {
-          host: 'peerjs-server.herokuapp.com',
-          secure: true,
-          port: 443,
-          debug: 3,
-        });
-
-        this.peer.on('open', (id) => {
-          this.localPlayerId = id;
-          console.log('[P2P] Room created with code:', this.roomCode, 'peer ID:', id);
-          resolve(this.roomCode);
-        });
-
-        this.peer.on('connection', (conn) => {
-          this.handleIncomingConnection(conn);
-        });
-
-        this.peer.on('error', (error) => {
-          console.error('[P2P] Peer error:', error);
-          this.onConnectionErrorCallback?.(error);
-          reject(error);
-        });
-
-        // Set timeout for peer initialization
-        setTimeout(() => {
-          if (!this.localPlayerId) {
-            reject(new Error('Peer initialization timeout'));
-          }
-        }, 10000);
-      } catch (error) {
-        console.error('[P2P] Error creating peer:', error);
-        reject(error);
-      }
-    });
+    try {
+      const response = await fetch('/api/rooms/create', { method: 'POST' });
+      const data = await response.json();
+      
+      this.roomCode = data.roomCode;
+      this.localPlayerId = data.playerId;
+      
+      console.log('[P2P] Room created with code:', this.roomCode);
+      return this.roomCode;
+    } catch (error) {
+      console.error('[P2P] Error creating room:', error);
+      throw error;
+    }
   }
 
   async joinRoom(playerName: string, roomCode: string): Promise<void> {
@@ -95,53 +71,23 @@ export class P2PManager {
     this.isHost = false;
     this.roomCode = roomCode;
 
-    return new Promise((resolve, reject) => {
-      try {
-        this.peer = new Peer({
-          host: 'peerjs-server.herokuapp.com',
-          secure: true,
-          port: 443,
-          debug: 3,
-        });
-
-        this.peer.on('open', (id) => {
-          this.localPlayerId = id;
-          console.log('[P2P] Peer ID:', id, 'connecting to room:', roomCode);
-
-          const conn = this.peer!.connect(roomCode);
-
-          const hostConnection: PlayerConnection = {
-            id: roomCode,
-            name: 'HOST',
-            connection: conn,
-            isHost: true
-          };
-          this.connections.set(roomCode, hostConnection);
-
-          this.setupConnection(conn, playerName, true);
-
-          conn.on('open', () => {
-            console.log('[P2P] Connected to room:', roomCode);
-            resolve();
-          });
-
-          conn.on('error', (error) => {
-            console.error('[P2P] Connection error:', error);
-            this.onConnectionErrorCallback?.(error);
-            reject(error);
-          });
-        });
-
-        this.peer.on('error', (error) => {
-          console.error('[P2P] Peer error:', error);
-          this.onConnectionErrorCallback?.(error);
-          reject(error);
-        });
-      } catch (error) {
-        console.error('[P2P] Error creating peer:', error);
-        reject(error);
-      }
-    });
+    try {
+      const response = await fetch('/api/rooms/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ roomCode })
+      });
+      
+      if (!response.ok) throw new Error('Failed to join room');
+      
+      const data = await response.json();
+      this.localPlayerId = data.playerId;
+      
+      console.log('[P2P] Joined room:', roomCode, 'as player:', this.localPlayerId);
+    } catch (error) {
+      console.error('[P2P] Error joining room:', error);
+      throw error;
+    }
   }
 
   private handleIncomingConnection(conn: DataConnection): void {
