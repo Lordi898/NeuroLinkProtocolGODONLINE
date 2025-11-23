@@ -358,6 +358,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const player: RoomPlayer = { id: playerId, name: playerName, ws };
     room.players.set(playerId, player);
 
+    // Send current players list to the new player
+    const playersList = Array.from(room.players.values()).map(p => ({
+      id: p.id,
+      name: p.name
+    }));
+    
+    ws.send(JSON.stringify({
+      type: 'players-list',
+      data: { players: playersList }
+    }));
+
     // Notify others that player joined
     room.players.forEach((p) => {
       if (p.id !== playerId && p.ws.readyState === WebSocket.OPEN) {

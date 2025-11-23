@@ -110,17 +110,36 @@ export class P2PManager {
       try {
         const message = JSON.parse(event.data);
         
-        if (message.type === 'player-joined') {
+        if (message.type === 'players-list') {
+          // Initial list of players in the room
+          const { players } = message.data;
+          this.connections.clear();
+          players.forEach((p: any) => {
+            if (p.id !== this.localPlayerId) {
+              const playerConnection: PlayerConnection = {
+                id: p.id,
+                name: p.name,
+                connection: null as any,
+                isHost: false
+              };
+              this.connections.set(p.id, playerConnection);
+              this.onPlayerJoinCallback?.(playerConnection);
+            }
+          });
+          console.log('[P2P] Received players list:', players.length, 'players');
+        } else if (message.type === 'player-joined') {
           const { playerId, playerName } = message.data;
-          const playerConnection: PlayerConnection = {
-            id: playerId,
-            name: playerName,
-            connection: null as any,
-            isHost: false
-          };
-          this.connections.set(playerId, playerConnection);
-          this.onPlayerJoinCallback?.(playerConnection);
-          console.log('[P2P] Player joined:', playerName);
+          if (playerId !== this.localPlayerId) {
+            const playerConnection: PlayerConnection = {
+              id: playerId,
+              name: playerName,
+              connection: null as any,
+              isHost: false
+            };
+            this.connections.set(playerId, playerConnection);
+            this.onPlayerJoinCallback?.(playerConnection);
+            console.log('[P2P] Player joined:', playerName);
+          }
         } else if (message.type === 'player-left') {
           const { playerId } = message.data;
           this.connections.delete(playerId);
