@@ -4,6 +4,17 @@ import { generateSecretWord } from './gameMaster';
 import { soundManager } from './soundManager';
 import { wakeLockManager } from './wakeLock';
 import { type GamePlayer } from './gameState';
+import {
+  sanitizeText,
+  sanitizePlayerName,
+  sanitizeClue,
+  checkMessageRateLimit,
+  checkVoteRateLimit,
+  validatePlayerId,
+  validateMessageContent,
+  validateClueContent,
+  clearRateLimits
+} from './validation';
 
 export class GameController {
   private p2p: P2PManager;
@@ -122,7 +133,8 @@ export class GameController {
   }
 
   async createRoom(playerName: string): Promise<void> {
-    const roomCode = await this.p2p.createRoom(playerName);
+    const sanitizedName = sanitizePlayerName(playerName);
+    const roomCode = await this.p2p.createRoom(sanitizedName);
     const localPlayerId = this.p2p.getLocalPlayerId();
     
     this.gameState.setState({
@@ -132,7 +144,7 @@ export class GameController {
       hostPlayerId: localPlayerId,
       players: [{
         id: localPlayerId,
-        name: playerName,
+        name: sanitizedName,
         isHost: true,
         signalStrength: 100
       }]
@@ -143,7 +155,8 @@ export class GameController {
   }
 
   async joinRoom(playerName: string, roomCode: string): Promise<void> {
-    await this.p2p.joinRoom(playerName, roomCode);
+    const sanitizedName = sanitizePlayerName(playerName);
+    await this.p2p.joinRoom(sanitizedName, roomCode);
     const localPlayerId = this.p2p.getLocalPlayerId();
     
     this.gameState.setState({
@@ -400,6 +413,25 @@ export class GameController {
 
   castVote(targetId: string): void {
     const localPlayerId = this.gameState.getState().localPlayerId;
+    
+    // Validate vote
+    if (!validatePlayerId(localPlayerId) || !validatePlayerId(targetId)) {
+      console.error('[GAME] Invalid vote - invalid player IDs');
+      return;
+    }
+    
+    if (!checkVoteRateLimit(localPlayerId)) {
+      console.warn('[GAME] Vote rate limited for player:', localPlayerId);
+      return;
+    }
+    
+    const state = this.gameState.getState();
+    const targetPlayer = state.players.find(p => p.id === targetId);
+    if (!targetPlayer || targetPlayer.isEliminated) {
+      console.error('[GAME] Cannot vote for eliminated or non-existent player');
+      return;
+    }
+    
     this.gameState.castVote(localPlayerId, targetId);
 
     this.p2p.broadcast({
@@ -416,6 +448,28 @@ export class GameController {
 
   private handleVoteCast(message: P2PMessage): void {
     const { voterId, targetId } = message.data;
+    
+    // Validate vote data
+    if (!validatePlayerId(voterId) || !validatePlayerId(targetId)) {
+      console.error('[GAME] Invalid vote received - invalid player IDs');
+      return;
+    }
+    
+    const state = this.gameState.getState();
+    const voter = state.players.find(p => p.id === voterId);
+    const target = state.players.find(p => p.id === targetId);
+    
+    if (!voter || !target || voter.isEliminated || target.isEliminated) {
+      console.error('[GAME] Invalid vote - eliminated or non-existent players');
+      return;
+    }
+    
+    // Prevent double voting
+    if (voter.hasVoted && voter.votedFor !== targetId) {
+      console.warn('[GAME] Player attempted to vote twice:', voterId);
+      return;
+    }
+    
     this.gameState.castVote(voterId, targetId);
 
     if (this.gameState.isLocalPlayerHost()) {

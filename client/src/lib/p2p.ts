@@ -11,7 +11,13 @@ export type MessageType =
   | 'game-over'
   | 'noise-bomb'
   | 'sync-state'
-  | 'chat-message';
+  | 'chat-message'
+  | 'clue-display'
+  | 'voting-results'
+  | 'player-eliminated'
+  | 'game-ended-admin'
+  | 'voting-start'
+  | 'player-kicked';
 
 export interface P2PMessage {
   type: MessageType;
