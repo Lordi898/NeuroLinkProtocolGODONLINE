@@ -44,14 +44,14 @@ export function LobbyScreen({
   const { language, setLanguage, theme, setTheme, styleMode, setStyleMode, t } = useLanguage();
 
   return (
-    <div className="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center gap-8">
-      <GlitchText className="text-4xl md:text-6xl text-center">
+    <div className="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center gap-6">
+      <GlitchText className="text-3xl md:text-5xl text-center">
         {t('neuroLink')}
       </GlitchText>
-      <p className="text-secondary text-sm">{t('protocolZero')}</p>
+      <p className="text-secondary text-xs md:text-sm leading-tight">{t('protocolZero')}</p>
 
       {/* Style, Theme and Language Selectors */}
-      <div className="flex gap-4 flex-wrap justify-center">
+      <div className="flex gap-2 md:gap-4 flex-wrap justify-center">
         <div className="flex flex-col gap-2">
           <Label className="text-xs text-center">{t('styleMode')}</Label>
           <Select value={styleMode} onValueChange={(value) => setStyleMode(value as 'hacker' | 'futurista' | 'retro')}>

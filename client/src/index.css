@@ -457,6 +457,32 @@
   --font-mono: 'Press Start 2P', cursive;
 }
 
+[data-style="retro"][data-theme="dark"] * {
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+
+[data-style="retro"][data-theme="dark"] h1,
+[data-style="retro"][data-theme="dark"] h2,
+[data-style="retro"][data-theme="dark"] h3 {
+  font-size: 1.2rem !important;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+[data-style="retro"][data-theme="dark"] p {
+  margin: 0.3rem 0;
+  font-size: 0.65rem !important;
+}
+
+[data-style="retro"][data-theme="dark"] label {
+  font-size: 0.6rem !important;
+  margin-bottom: 0.25rem;
+}
+
 /* RETRO - Normal Theme */
 [data-style="retro"][data-theme="normal"] {
   --button-outline: rgba(255, 20, 147, .25);
@@ -499,6 +525,32 @@
   --chart-5: 50 100% 50%;
 }
 
+[data-style="retro"][data-theme="normal"] * {
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+
+[data-style="retro"][data-theme="normal"] h1,
+[data-style="retro"][data-theme="normal"] h2,
+[data-style="retro"][data-theme="normal"] h3 {
+  font-size: 1.2rem !important;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+[data-style="retro"][data-theme="normal"] p {
+  margin: 0.3rem 0;
+  font-size: 0.65rem !important;
+}
+
+[data-style="retro"][data-theme="normal"] label {
+  font-size: 0.6rem !important;
+  margin-bottom: 0.25rem;
+}
+
 /* RETRO - Light Theme */
 [data-style="retro"][data-theme="light"] {
   --button-outline: rgba(255, 20, 147, .25);
@@ -539,6 +591,32 @@
   --chart-3: 0 100% 55%;
   --chart-4: 60 100% 50%;
   --chart-5: 50 100% 50%;
+}
+
+[data-style="retro"][data-theme="light"] * {
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+
+[data-style="retro"][data-theme="light"] h1,
+[data-style="retro"][data-theme="light"] h2,
+[data-style="retro"][data-theme="light"] h3 {
+  font-size: 1.2rem !important;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+[data-style="retro"][data-theme="light"] p {
+  margin: 0.3rem 0;
+  font-size: 0.65rem !important;
+}
+
+[data-style="retro"][data-theme="light"] label {
+  font-size: 0.6rem !important;
+  margin-bottom: 0.25rem;
 }
 
 @layer base {
