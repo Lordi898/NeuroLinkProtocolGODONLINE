@@ -325,6 +325,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  
+  // Setup PeerJS server for P2P connections
+  const peerServer = ExpressPeerServer(httpServer, {
+    debug: true,
+    path: '/peerjs'
+  });
+  app.use('/peerjs', peerServer);
 
   // WebSocket server for real-time communication
   const wss = new WebSocketServer({ noServer: true });
