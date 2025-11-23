@@ -192,6 +192,20 @@ export function JoinScreen({ onCreateRoom, onJoinRoom }: JoinScreenProps) {
           </div>
         </TerminalCard>
       )}
+
+      {/* Creator Info Footer */}
+      <div className="fixed bottom-4 text-center text-xs text-muted-foreground">
+        <p>Created by <span className="font-bold text-secondary">Imanol Magaña</span></p>
+        <a 
+          href="https://github.com/Lordi898/ImpostorOnline_NeuroLinkProtocol.git"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:text-primary/80 underline"
+          data-testid="link-github"
+        >
+          GitHub Repository
+        </a>
+      </div>
     </div>
   );
 }
