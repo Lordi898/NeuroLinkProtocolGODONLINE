@@ -44,11 +44,10 @@ function AppContent() {
 
   // Setup game controller
   useEffect(() => {
-    const unsubscribe = gameController.onStateChange((state) => {
+    gameController.onStateChange((state) => {
       setGameState(state);
     });
     return () => {
-      unsubscribe?.();
       gameController.disconnect();
     };
   }, []);

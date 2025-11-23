@@ -1,7 +1,7 @@
 import { type Player } from '@/components/PlayerList';
 import { type WordData } from '@/data/fallbackWords';
 
-export type GamePhase = 'join' | 'profile' | 'lobby' | 'role-reveal' | 'gameplay' | 'clue-display' | 'voting' | 'voting-results' | 'game-over';
+export type GamePhase = 'join' | 'profile' | 'lobby' | 'role-reveal' | 'gameplay' | 'clue-display' | 'voting' | 'voting-results' | 'game-over' | 'leaderboard' | 'match-history';
 
 export interface ChatMessage {
   id: string;
