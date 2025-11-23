@@ -34,7 +34,7 @@ export function JoinScreen({ onCreateRoom, onJoinRoom }: JoinScreenProps) {
   return (
     <div className="min-h-screen p-4 flex flex-col items-center justify-center gap-8 scanline">
       <div className="text-center space-y-2 md:space-y-4 flex flex-col items-center">
-        <GlitchText className="text-7xl md:text-8xl lg:text-9xl block">
+        <GlitchText className="text-5xl md:text-7xl block">
           {t('neuroLink')}
         </GlitchText>
         <p className="text-secondary text-xs md:text-lg leading-tight">{t('protocolZero')}</p>

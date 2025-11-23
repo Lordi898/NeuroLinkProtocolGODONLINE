@@ -471,9 +471,7 @@
   line-height: 1.2;
 }
 
-[data-style="retro"][data-theme="dark"] .text-7xl,
-[data-style="retro"][data-theme="dark"] .text-8xl,
-[data-style="retro"][data-theme="dark"] .text-9xl {
+[data-style="retro"][data-theme="dark"] .text-glow-green {
   font-size: 4rem !important;
   line-height: 1.1;
 }
@@ -564,9 +562,7 @@
   line-height: 1.2;
 }
 
-[data-style="retro"][data-theme="normal"] .text-7xl,
-[data-style="retro"][data-theme="normal"] .text-8xl,
-[data-style="retro"][data-theme="normal"] .text-9xl {
+[data-style="retro"][data-theme="normal"] .text-glow-green {
   font-size: 4rem !important;
   line-height: 1.1;
 }
@@ -657,9 +653,7 @@
   line-height: 1.2;
 }
 
-[data-style="retro"][data-theme="light"] .text-7xl,
-[data-style="retro"][data-theme="light"] .text-8xl,
-[data-style="retro"][data-theme="light"] .text-9xl {
+[data-style="retro"][data-theme="light"] .text-glow-green {
   font-size: 4rem !important;
   line-height: 1.1;
 }

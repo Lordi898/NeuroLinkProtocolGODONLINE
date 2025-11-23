@@ -45,7 +45,7 @@ export function LobbyScreen({
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center gap-6">
-      <GlitchText className="text-5xl md:text-7xl text-center">
+      <GlitchText className="text-4xl md:text-6xl text-center">
         {t('neuroLink')}
       </GlitchText>
       <p className="text-secondary text-xs md:text-sm leading-tight">{t('protocolZero')}</p>
