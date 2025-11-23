@@ -83,6 +83,11 @@ export class DatabaseStorage implements IStorage {
     const matchIds = userMatches.map(m => m.matchId);
     if (matchIds.length === 0) return [];
     
+    // Validate matchIds
+    if (!Array.isArray(matchIds) || matchIds.some(id => typeof id !== 'string')) {
+      return [];
+    }
+    
     const result = await db
       .select()
       .from(matches)
@@ -136,6 +141,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getFriends(userId: string): Promise<User[]> {
+    // Validate userId
+    if (!userId || typeof userId !== 'string') {
+      return [];
+    }
+    
     const userFriends = await db
       .select({ friendId: friends.friendId })
       .from(friends)
@@ -143,6 +153,11 @@ export class DatabaseStorage implements IStorage {
     
     const friendIds = userFriends.map(f => f.friendId);
     if (friendIds.length === 0) return [];
+    
+    // Validate friendIds
+    if (!Array.isArray(friendIds) || friendIds.some(id => typeof id !== 'string')) {
+      return [];
+    }
     
     const result = await db
       .select()

@@ -22,6 +22,17 @@ export async function registerUser(username: string, password: string) {
   if (!password || typeof password !== 'string' || password.length < 8 || password.length > 128) {
     throw new Error('INVALID_PASSWORD');
   }
+  
+  // Validate password strength: requires mix of upper, lower, and number OR special char
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+  
+  const strengthScore = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
+  if (strengthScore < 2) {
+    throw new Error('PASSWORD_WEAK');
+  }
 
   // Check if user exists
   const existingUser = await storage.getUserByUsername(username.toLowerCase());
