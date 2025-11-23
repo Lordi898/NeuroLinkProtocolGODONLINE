@@ -244,7 +244,7 @@ function App() {
               )}
             </div>
 
-            {process.env.NODE_ENV === 'development' && (
+            {gameState.adminMode && (
               <div className="fixed bottom-4 right-4 z-50 flex gap-2 flex-wrap max-w-xs">
                 <button
                   onClick={() => gameController.getState().phase = 'join'}
