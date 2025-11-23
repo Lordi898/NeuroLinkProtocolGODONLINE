@@ -37,40 +37,23 @@ function ThemeApplier() {
 }
 
 function AppContent() {
+  // All hooks must be called unconditionally BEFORE any returns
   const { user, loading: authLoading } = useAuth();
   const [gameState, setGameState] = useState<GameState>(gameController.getState());
   const { toast } = useToast();
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center scanline">
-        <div className="text-xl font-mono text-primary">CONNECTING...</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <LoginScreen onLoginSuccess={() => {}} />;
-  }
-
-  if (gameState.phase === 'leaderboard') {
-    return <LeaderboardScreen onBack={() => setGameState(prev => ({ ...prev, phase: 'join' }))} />;
-  }
-
-  if (gameState.phase === 'match-history') {
-    return <MatchHistoryScreen onBack={() => setGameState(prev => ({ ...prev, phase: 'join' }))} />;
-  }
-
+  // Setup game controller
   useEffect(() => {
-    gameController.onStateChange((state) => {
+    const unsubscribe = gameController.onStateChange((state) => {
       setGameState(state);
     });
-
     return () => {
+      unsubscribe?.();
       gameController.disconnect();
     };
   }, []);
 
+  // Define all handlers BEFORE any conditional returns
   const handleCreateRoom = async (playerName: string, adminMode: boolean = false) => {
     try {
       await gameController.createRoom(playerName);
@@ -173,16 +156,37 @@ function AppContent() {
     setGameState(prev => ({ ...prev, phase: 'join' }));
   };
 
+  // Compute derived values
   const localPlayer = gameState.players.find(p => p.id === gameState.localPlayerId);
   const isHost = gameState.localPlayerId === gameState.hostPlayerId;
   const isImpostor = localPlayer?.isImpostor || false;
   const isMyTurn = gameState.activePlayerId === gameState.localPlayerId;
   const impostorPlayer = gameState.players.find(p => p.id === gameState.impostorPlayerId);
-
   const playersWithSignal: Player[] = gameState.players.map(p => ({
     ...p,
     signalStrength: 100
   }));
+
+  // Conditional rendering with early returns (NOW allowed after all hooks)
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center scanline">
+        <div className="text-xl font-mono text-primary">CONNECTING...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginScreen onLoginSuccess={() => {}} />;
+  }
+
+  if (gameState.phase === 'leaderboard') {
+    return <LeaderboardScreen onBack={() => setGameState(prev => ({ ...prev, phase: 'join' }))} />;
+  }
+
+  if (gameState.phase === 'match-history') {
+    return <MatchHistoryScreen onBack={() => setGameState(prev => ({ ...prev, phase: 'join' }))} />;
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
