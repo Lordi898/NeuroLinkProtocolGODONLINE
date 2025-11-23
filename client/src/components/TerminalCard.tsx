@@ -17,7 +17,7 @@ export function TerminalCard({ title, children, className, scanline = true }: Te
     )}>
       {title && (
         <CardHeader className="border-b border-primary/30">
-          <CardTitle className="text-primary text-glow-green tracking-widest">
+          <CardTitle className="font-semibold text-glow-green tracking-widest text-[19px]">
             {title}
           </CardTitle>
         </CardHeader>
