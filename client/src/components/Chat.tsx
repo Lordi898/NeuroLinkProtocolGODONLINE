@@ -46,7 +46,7 @@ export function Chat({ messages, onSendMessage, localPlayerId, activePlayerId, s
       }
     }
 
-    onSendMessage(inputText);
+    onSendMessage(inputText.toUpperCase());
     setInputText('');
     setError('');
   };

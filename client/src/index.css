@@ -718,6 +718,58 @@
   [data-style="retro"] [data-testid*="chat-message"] .text-xs {
     font-size: 0.6rem !important;
   }
+
+  /* RETRO and FUTURISTA Switch styling */
+  [data-style="retro"] [role="switch"],
+  [data-style="futurista"] [role="switch"] {
+    height: 1.5rem !important;
+    width: 2.75rem !important;
+  }
+
+  [data-style="retro"] [role="switch"][data-state="checked"] > span,
+  [data-style="futurista"] [role="switch"][data-state="checked"] > span {
+    transform: translateX(1.25rem) !important;
+  }
+
+  [data-style="retro"] [role="switch"][data-state="unchecked"] > span,
+  [data-style="futurista"] [role="switch"][data-state="unchecked"] > span {
+    transform: translateX(0) !important;
+  }
+
+  [data-style="retro"] [role="switch"] > span,
+  [data-style="futurista"] [role="switch"] > span {
+    height: 1.35rem !important;
+    width: 1.35rem !important;
+    transition: transform 200ms !important;
+  }
+
+  /* FUTURISTA Switch specific colors */
+  [data-style="futurista"] [role="switch"][data-state="checked"] {
+    background-color: hsl(190 100% 52%) !important;
+  }
+
+  [data-style="futurista"] [role="switch"][data-state="unchecked"] {
+    background-color: hsl(190 100% 20%) !important;
+  }
+
+  [data-style="futurista"] [role="switch"] > span {
+    background-color: hsl(190 100% 85%) !important;
+    box-shadow: 0 0 10px hsl(190 100% 52% / 0.5) !important;
+  }
+
+  /* RETRO Switch specific styling */
+  [data-style="retro"] [role="switch"] {
+    border: 2px solid hsl(255 100% 50%) !important;
+    background-color: hsl(255 100% 10%) !important;
+  }
+
+  [data-style="retro"] [role="switch"][data-state="checked"] {
+    background-color: hsl(255 100% 30%) !important;
+  }
+
+  [data-style="retro"] [role="switch"] > span {
+    background-color: hsl(255 100% 100%) !important;
+  }
 }
 
 /**
