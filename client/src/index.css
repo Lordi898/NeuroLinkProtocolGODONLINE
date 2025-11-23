@@ -281,177 +281,177 @@
 }
 
 /* ===== FUTURISTA STYLE MODE ===== */
-/* FUTURISTA - Dark Theme */
+/* FUTURISTA - Dark Theme (Tomorrowland) */
 [data-style="futurista"][data-theme="dark"],
 [data-style="futurista"]:root {
-  --button-outline: rgba(0, 150, 255, .20);
-  --badge-outline: rgba(0, 150, 255, .10);
-  --elevate-1: rgba(0, 150, 255, .05);
-  --elevate-2: rgba(0, 150, 255, .12);
-  --background: 200 100% 5%;
-  --foreground: 185 100% 50%;
-  --border: 185 100% 20%;
-  --card: 200 100% 8%;
-  --card-foreground: 185 100% 50%;
-  --card-border: 185 100% 25%;
-  --sidebar: 200 100% 6%;
-  --sidebar-foreground: 185 100% 50%;
-  --sidebar-border: 185 100% 20%;
-  --sidebar-primary: 185 100% 50%;
-  --sidebar-primary-foreground: 0 0% 0%;
-  --sidebar-accent: 280 100% 55%;
-  --sidebar-accent-foreground: 0 0% 0%;
-  --sidebar-ring: 185 100% 50%;
-  --popover: 200 100% 8%;
-  --popover-foreground: 185 100% 50%;
-  --popover-border: 185 100% 25%;
-  --primary: 185 100% 50%;
-  --primary-foreground: 0 0% 0%;
-  --secondary: 280 100% 55%;
-  --secondary-foreground: 0 0% 0%;
-  --muted: 200 50% 20%;
-  --muted-foreground: 185 100% 40%;
-  --accent: 280 100% 55%;
-  --accent-foreground: 0 0% 0%;
-  --destructive: 0 100% 50%;
+  --button-outline: rgba(100, 200, 255, .25);
+  --badge-outline: rgba(100, 200, 255, .15);
+  --elevate-1: rgba(100, 200, 255, .08);
+  --elevate-2: rgba(100, 200, 255, .16);
+  --background: 200 60% 4%;
+  --foreground: 190 100% 52%;
+  --border: 190 80% 35%;
+  --card: 200 50% 8%;
+  --card-foreground: 190 100% 52%;
+  --card-border: 190 80% 40%;
+  --sidebar: 200 50% 6%;
+  --sidebar-foreground: 190 100% 52%;
+  --sidebar-border: 190 80% 35%;
+  --sidebar-primary: 190 100% 52%;
+  --sidebar-primary-foreground: 0 0% 2%;
+  --sidebar-accent: 260 90% 65%;
+  --sidebar-accent-foreground: 0 0% 2%;
+  --sidebar-ring: 190 100% 52%;
+  --popover: 200 50% 8%;
+  --popover-foreground: 190 100% 52%;
+  --popover-border: 190 80% 40%;
+  --primary: 190 100% 52%;
+  --primary-foreground: 0 0% 2%;
+  --secondary: 260 90% 65%;
+  --secondary-foreground: 0 0% 2%;
+  --muted: 200 40% 20%;
+  --muted-foreground: 190 100% 45%;
+  --accent: 260 90% 65%;
+  --accent-foreground: 0 0% 2%;
+  --destructive: 15 100% 55%;
   --destructive-foreground: 0 0% 100%;
-  --input: 200 100% 12%;
-  --ring: 185 100% 50%;
-  --chart-1: 185 100% 50%;
-  --chart-2: 280 100% 55%;
-  --chart-3: 0 100% 50%;
+  --input: 200 50% 14%;
+  --ring: 190 100% 52%;
+  --chart-1: 190 100% 52%;
+  --chart-2: 260 90% 65%;
+  --chart-3: 15 100% 55%;
   --chart-4: 60 100% 50%;
   --chart-5: 300 100% 50%;
-  --font-sans: 'Space Mono', monospace;
-  --font-serif: 'Space Mono', monospace;
-  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Orbitron', monospace;
+  --font-serif: 'Orbitron', monospace;
+  --font-mono: 'Space Grotesk', monospace;
 }
 
 /* FUTURISTA - Normal Theme */
 [data-style="futurista"][data-theme="normal"] {
-  --button-outline: rgba(0, 150, 255, .20);
-  --badge-outline: rgba(0, 150, 255, .10);
-  --elevate-1: rgba(0, 150, 255, .05);
-  --elevate-2: rgba(0, 150, 255, .12);
-  --background: 0 0% 98%;
-  --foreground: 185 100% 35%;
-  --border: 185 50% 85%;
+  --button-outline: rgba(100, 200, 255, .25);
+  --badge-outline: rgba(100, 200, 255, .15);
+  --elevate-1: rgba(100, 200, 255, .08);
+  --elevate-2: rgba(100, 200, 255, .16);
+  --background: 0 0% 97%;
+  --foreground: 190 90% 30%;
+  --border: 190 60% 80%;
   --card: 0 0% 100%;
-  --card-foreground: 185 100% 35%;
-  --card-border: 185 50% 88%;
-  --sidebar: 0 0% 97%;
-  --sidebar-foreground: 185 100% 35%;
-  --sidebar-border: 185 50% 85%;
-  --sidebar-primary: 185 100% 45%;
+  --card-foreground: 190 90% 30%;
+  --card-border: 190 60% 84%;
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 190 90% 30%;
+  --sidebar-border: 190 60% 80%;
+  --sidebar-primary: 190 100% 42%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 280 100% 50%;
+  --sidebar-accent: 260 90% 55%;
   --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-ring: 185 100% 45%;
+  --sidebar-ring: 190 100% 42%;
   --popover: 0 0% 100%;
-  --popover-foreground: 185 100% 35%;
-  --popover-border: 185 50% 88%;
-  --primary: 185 100% 45%;
+  --popover-foreground: 190 90% 30%;
+  --popover-border: 190 60% 84%;
+  --primary: 190 100% 42%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 280 100% 50%;
+  --secondary: 260 90% 55%;
   --secondary-foreground: 0 0% 100%;
-  --muted: 185 20% 85%;
-  --muted-foreground: 185 80% 40%;
-  --accent: 280 100% 50%;
+  --muted: 190 30% 85%;
+  --muted-foreground: 190 80% 40%;
+  --accent: 260 90% 55%;
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%;
+  --destructive: 15 100% 55%;
   --destructive-foreground: 0 0% 100%;
-  --input: 185 30% 88%;
-  --ring: 185 100% 45%;
-  --chart-1: 185 100% 45%;
-  --chart-2: 280 100% 50%;
-  --chart-3: 0 84% 60%;
+  --input: 190 40% 86%;
+  --ring: 190 100% 42%;
+  --chart-1: 190 100% 42%;
+  --chart-2: 260 90% 55%;
+  --chart-3: 15 100% 55%;
   --chart-4: 60 100% 50%;
   --chart-5: 300 100% 50%;
 }
 
 /* FUTURISTA - Light Theme */
 [data-style="futurista"][data-theme="light"] {
-  --button-outline: rgba(0, 150, 255, .20);
-  --badge-outline: rgba(0, 150, 255, .10);
-  --elevate-1: rgba(0, 150, 255, .05);
-  --elevate-2: rgba(0, 150, 255, .12);
-  --background: 185 60% 92%;
-  --foreground: 0 0% 8%;
-  --border: 185 40% 78%;
-  --card: 185 60% 95%;
-  --card-foreground: 0 0% 8%;
-  --card-border: 185 40% 82%;
-  --sidebar: 185 50% 93%;
-  --sidebar-foreground: 0 0% 8%;
-  --sidebar-border: 185 40% 78%;
-  --sidebar-primary: 185 100% 40%;
+  --button-outline: rgba(100, 200, 255, .25);
+  --badge-outline: rgba(100, 200, 255, .15);
+  --elevate-1: rgba(100, 200, 255, .08);
+  --elevate-2: rgba(100, 200, 255, .16);
+  --background: 190 50% 93%;
+  --foreground: 0 0% 5%;
+  --border: 190 40% 78%;
+  --card: 190 50% 96%;
+  --card-foreground: 0 0% 5%;
+  --card-border: 190 40% 82%;
+  --sidebar: 190 40% 94%;
+  --sidebar-foreground: 0 0% 5%;
+  --sidebar-border: 190 40% 78%;
+  --sidebar-primary: 190 100% 38%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 280 100% 45%;
+  --sidebar-accent: 260 90% 50%;
   --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-ring: 185 100% 40%;
-  --popover: 185 60% 95%;
-  --popover-foreground: 0 0% 8%;
-  --popover-border: 185 40% 82%;
-  --primary: 185 100% 40%;
+  --sidebar-ring: 190 100% 38%;
+  --popover: 190 50% 96%;
+  --popover-foreground: 0 0% 5%;
+  --popover-border: 190 40% 82%;
+  --primary: 190 100% 38%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 280 100% 45%;
+  --secondary: 260 90% 50%;
   --secondary-foreground: 0 0% 100%;
-  --muted: 185 30% 85%;
-  --muted-foreground: 185 80% 35%;
-  --accent: 280 100% 45%;
+  --muted: 190 30% 82%;
+  --muted-foreground: 190 80% 35%;
+  --accent: 260 90% 50%;
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 100% 50%;
+  --destructive: 15 100% 55%;
   --destructive-foreground: 0 0% 100%;
-  --input: 185 40% 85%;
-  --ring: 185 100% 40%;
-  --chart-1: 185 100% 40%;
-  --chart-2: 280 100% 45%;
-  --chart-3: 0 100% 50%;
+  --input: 190 40% 84%;
+  --ring: 190 100% 38%;
+  --chart-1: 190 100% 38%;
+  --chart-2: 260 90% 50%;
+  --chart-3: 15 100% 55%;
   --chart-4: 60 100% 50%;
   --chart-5: 120 100% 40%;
 }
 
 /* ===== RETRO STYLE MODE ===== */
-/* RETRO - Dark Theme (80s Arcade) */
+/* RETRO - Dark Theme (80s Arcade - Neon Magenta) */
 [data-style="retro"][data-theme="dark"] {
-  --button-outline: rgba(255, 0, 255, .20);
-  --badge-outline: rgba(255, 0, 255, .10);
-  --elevate-1: rgba(255, 0, 255, .05);
-  --elevate-2: rgba(255, 0, 255, .12);
-  --background: 270 80% 8%;
-  --foreground: 280 100% 55%;
-  --border: 280 100% 35%;
-  --card: 270 80% 12%;
-  --card-foreground: 280 100% 55%;
-  --card-border: 280 100% 40%;
-  --sidebar: 270 80% 10%;
-  --sidebar-foreground: 280 100% 55%;
-  --sidebar-border: 280 100% 35%;
-  --sidebar-primary: 280 100% 55%;
-  --sidebar-primary-foreground: 0 0% 0%;
-  --sidebar-accent: 40 100% 50%;
-  --sidebar-accent-foreground: 0 0% 0%;
-  --sidebar-ring: 280 100% 55%;
-  --popover: 270 80% 12%;
-  --popover-foreground: 280 100% 55%;
-  --popover-border: 280 100% 40%;
-  --primary: 280 100% 55%;
-  --primary-foreground: 0 0% 0%;
-  --secondary: 40 100% 50%;
-  --secondary-foreground: 0 0% 0%;
-  --muted: 270 60% 20%;
-  --muted-foreground: 280 100% 50%;
-  --accent: 40 100% 50%;
-  --accent-foreground: 0 0% 0%;
-  --destructive: 0 100% 55%;
-  --destructive-foreground: 0 0% 0%;
-  --input: 270 80% 18%;
-  --ring: 280 100% 55%;
-  --chart-1: 280 100% 55%;
-  --chart-2: 40 100% 50%;
-  --chart-3: 0 100% 55%;
+  --button-outline: rgba(255, 20, 147, .25);
+  --badge-outline: rgba(255, 20, 147, .15);
+  --elevate-1: rgba(255, 20, 147, .08);
+  --elevate-2: rgba(255, 20, 147, .16);
+  --background: 320 100% 5%;
+  --foreground: 330 100% 60%;
+  --border: 330 100% 35%;
+  --card: 320 90% 10%;
+  --card-foreground: 330 100% 60%;
+  --card-border: 330 100% 42%;
+  --sidebar: 320 90% 8%;
+  --sidebar-foreground: 330 100% 60%;
+  --sidebar-border: 330 100% 35%;
+  --sidebar-primary: 330 100% 60%;
+  --sidebar-primary-foreground: 0 0% 2%;
+  --sidebar-accent: 180 100% 50%;
+  --sidebar-accent-foreground: 0 0% 2%;
+  --sidebar-ring: 330 100% 60%;
+  --popover: 320 90% 10%;
+  --popover-foreground: 330 100% 60%;
+  --popover-border: 330 100% 42%;
+  --primary: 330 100% 60%;
+  --primary-foreground: 0 0% 2%;
+  --secondary: 180 100% 50%;
+  --secondary-foreground: 0 0% 2%;
+  --muted: 320 60% 22%;
+  --muted-foreground: 330 100% 52%;
+  --accent: 180 100% 50%;
+  --accent-foreground: 0 0% 2%;
+  --destructive: 0 100% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 320 80% 16%;
+  --ring: 330 100% 60%;
+  --chart-1: 330 100% 60%;
+  --chart-2: 180 100% 50%;
+  --chart-3: 0 100% 60%;
   --chart-4: 60 100% 50%;
-  --chart-5: 300 100% 50%;
+  --chart-5: 50 100% 50%;
   --font-sans: 'Press Start 2P', cursive;
   --font-serif: 'Press Start 2P', cursive;
   --font-mono: 'Press Start 2P', cursive;
@@ -459,86 +459,86 @@
 
 /* RETRO - Normal Theme */
 [data-style="retro"][data-theme="normal"] {
-  --button-outline: rgba(255, 0, 255, .20);
-  --badge-outline: rgba(255, 0, 255, .10);
-  --elevate-1: rgba(255, 0, 255, .05);
-  --elevate-2: rgba(255, 0, 255, .12);
-  --background: 0 0% 95%;
-  --foreground: 270 100% 30%;
-  --border: 270 100% 60%;
-  --card: 0 0% 100%;
-  --card-foreground: 270 100% 30%;
-  --card-border: 270 100% 65%;
-  --sidebar: 0 0% 96%;
-  --sidebar-foreground: 270 100% 30%;
-  --sidebar-border: 270 100% 60%;
-  --sidebar-primary: 280 100% 40%;
+  --button-outline: rgba(255, 20, 147, .25);
+  --badge-outline: rgba(255, 20, 147, .15);
+  --elevate-1: rgba(255, 20, 147, .08);
+  --elevate-2: rgba(255, 20, 147, .16);
+  --background: 0 0% 92%;
+  --foreground: 320 100% 28%;
+  --border: 320 100% 65%;
+  --card: 0 0% 98%;
+  --card-foreground: 320 100% 28%;
+  --card-border: 320 100% 68%;
+  --sidebar: 0 0% 94%;
+  --sidebar-foreground: 320 100% 28%;
+  --sidebar-border: 320 100% 65%;
+  --sidebar-primary: 330 100% 48%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 40 100% 45%;
-  --sidebar-accent-foreground: 0 0% 0%;
-  --sidebar-ring: 280 100% 40%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 270 100% 30%;
-  --popover-border: 270 100% 65%;
-  --primary: 280 100% 40%;
+  --sidebar-accent: 180 100% 42%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 330 100% 48%;
+  --popover: 0 0% 98%;
+  --popover-foreground: 320 100% 28%;
+  --popover-border: 320 100% 68%;
+  --primary: 330 100% 48%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 40 100% 45%;
-  --secondary-foreground: 0 0% 0%;
-  --muted: 270 20% 85%;
-  --muted-foreground: 270 100% 35%;
-  --accent: 40 100% 45%;
-  --accent-foreground: 0 0% 0%;
-  --destructive: 0 100% 50%;
+  --secondary: 180 100% 42%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 320 30% 82%;
+  --muted-foreground: 320 100% 32%;
+  --accent: 180 100% 42%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 100% 52%;
   --destructive-foreground: 0 0% 100%;
-  --input: 270 20% 88%;
-  --ring: 280 100% 40%;
-  --chart-1: 280 100% 40%;
-  --chart-2: 40 100% 45%;
-  --chart-3: 0 100% 50%;
+  --input: 320 30% 86%;
+  --ring: 330 100% 48%;
+  --chart-1: 330 100% 48%;
+  --chart-2: 180 100% 42%;
+  --chart-3: 0 100% 52%;
   --chart-4: 60 100% 50%;
-  --chart-5: 300 100% 50%;
+  --chart-5: 50 100% 50%;
 }
 
 /* RETRO - Light Theme */
 [data-style="retro"][data-theme="light"] {
-  --button-outline: rgba(255, 0, 255, .20);
-  --badge-outline: rgba(255, 0, 255, .10);
-  --elevate-1: rgba(255, 0, 255, .05);
-  --elevate-2: rgba(255, 0, 255, .12);
-  --background: 280 40% 88%;
-  --foreground: 0 0% 5%;
-  --border: 280 40% 72%;
-  --card: 280 40% 92%;
-  --card-foreground: 0 0% 5%;
-  --card-border: 280 40% 75%;
-  --sidebar: 280 30% 90%;
-  --sidebar-foreground: 0 0% 5%;
-  --sidebar-border: 280 40% 72%;
-  --sidebar-primary: 280 100% 45%;
+  --button-outline: rgba(255, 20, 147, .25);
+  --badge-outline: rgba(255, 20, 147, .15);
+  --elevate-1: rgba(255, 20, 147, .08);
+  --elevate-2: rgba(255, 20, 147, .16);
+  --background: 320 50% 90%;
+  --foreground: 0 0% 3%;
+  --border: 320 50% 75%;
+  --card: 320 50% 95%;
+  --card-foreground: 0 0% 3%;
+  --card-border: 320 50% 78%;
+  --sidebar: 320 40% 92%;
+  --sidebar-foreground: 0 0% 3%;
+  --sidebar-border: 320 50% 75%;
+  --sidebar-primary: 330 100% 50%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 40 100% 50%;
-  --sidebar-accent-foreground: 0 0% 0%;
-  --sidebar-ring: 280 100% 45%;
-  --popover: 280 40% 92%;
-  --popover-foreground: 0 0% 5%;
-  --popover-border: 280 40% 75%;
-  --primary: 280 100% 45%;
+  --sidebar-accent: 180 100% 45%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 330 100% 50%;
+  --popover: 320 50% 95%;
+  --popover-foreground: 0 0% 3%;
+  --popover-border: 320 50% 78%;
+  --primary: 330 100% 50%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 40 100% 50%;
-  --secondary-foreground: 0 0% 0%;
-  --muted: 280 20% 80%;
-  --muted-foreground: 280 80% 35%;
-  --accent: 40 100% 50%;
-  --accent-foreground: 0 0% 0%;
+  --secondary: 180 100% 45%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 320 40% 80%;
+  --muted-foreground: 320 100% 32%;
+  --accent: 180 100% 45%;
+  --accent-foreground: 0 0% 100%;
   --destructive: 0 100% 55%;
-  --destructive-foreground: 0 0% 0%;
-  --input: 280 30% 85%;
-  --ring: 280 100% 45%;
-  --chart-1: 280 100% 45%;
-  --chart-2: 40 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 320 40% 82%;
+  --ring: 330 100% 50%;
+  --chart-1: 330 100% 50%;
+  --chart-2: 180 100% 45%;
   --chart-3: 0 100% 55%;
   --chart-4: 60 100% 50%;
-  --chart-5: 120 100% 40%;
+  --chart-5: 50 100% 50%;
 }
 
 @layer base {
@@ -554,8 +554,51 @@
     background-size: 20px 20px;
   }
 
+  /* FUTURISTA Background */
+  [data-style="futurista"] body {
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(190, 230, 255, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(260, 180, 255, 0.05) 0%, transparent 50%),
+      linear-gradient(180deg, rgba(190, 230, 255, 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 20px;
+  }
+
+  /* RETRO Background - Scanlines */
+  [data-style="retro"] body {
+    background-image: 
+      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px),
+      repeating-linear-gradient(90deg, rgba(255, 20, 147, 0.03) 0px, rgba(255, 20, 147, 0.03) 2px, transparent 2px, transparent 4px);
+    background-size: 100% 2px, 4px 100%;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-wider;
+  }
+
+  /* FUTURISTA Styles */
+  [data-style="futurista"] h1,
+  [data-style="futurista"] h2,
+  [data-style="futurista"] h3,
+  [data-style="futurista"] h4,
+  [data-style="futurista"] h5,
+  [data-style="futurista"] h6 {
+    font-family: 'Orbitron', monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 900;
+  }
+
+  /* RETRO Styles */
+  [data-style="retro"] h1,
+  [data-style="retro"] h2,
+  [data-style="retro"] h3,
+  [data-style="retro"] h4,
+  [data-style="retro"] h5,
+  [data-style="retro"] h6 {
+    font-family: 'Press Start 2P', cursive;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
   }
 }
 
@@ -787,5 +830,168 @@
     50% {
       background-color: rgba(0, 255, 0, 0.1);
     }
+  }
+
+  /* ===== FUTURISTA ANIMATIONS ===== */
+  @keyframes futuristic-glow {
+    0%, 100% {
+      text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+      filter: brightness(1);
+    }
+    50% {
+      text-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 45px currentColor, 0 0 60px currentColor;
+      filter: brightness(1.2);
+    }
+  }
+
+  @keyframes laser-beam {
+    0% {
+      clip-path: polygon(0% 50%, 0% 50%, 0% 50%, 0% 50%);
+    }
+    100% {
+      clip-path: polygon(0% 50%, 100% 45%, 100% 55%, 0% 50%);
+    }
+  }
+
+  @keyframes float-up {
+    0% {
+      transform: translateY(0px);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes cyber-flicker {
+    0%, 100% {
+      opacity: 1;
+    }
+    10%, 20%, 30%, 50%, 70%, 90% {
+      opacity: 0.95;
+    }
+    15%, 25%, 35%, 55%, 75%, 85% {
+      opacity: 1;
+    }
+  }
+
+  [data-style="futurista"] .glitch-effect {
+    animation: cyber-flicker 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  }
+
+  [data-style="futurista"] .text-glow,
+  [data-style="futurista"] .text-glow-green {
+    animation: futuristic-glow 2s ease-in-out infinite;
+  }
+
+  /* ===== RETRO ANIMATIONS ===== */
+  @keyframes pixelate {
+    0%, 100% {
+      filter: pixelate(1px) blur(0px);
+    }
+    50% {
+      filter: pixelate(2px) blur(0.5px);
+    }
+  }
+
+  @keyframes low-fps {
+    0% {
+      transform: translateY(0px) scaleY(0.98);
+    }
+    14% {
+      transform: translateY(-1px) scaleY(0.99);
+    }
+    28% {
+      transform: translateY(0px) scaleY(0.98);
+    }
+    42% {
+      transform: translateY(-1px) scaleY(0.99);
+    }
+    56% {
+      transform: translateY(0px) scaleY(0.98);
+    }
+    70% {
+      transform: translateY(-1px) scaleY(0.99);
+    }
+    84% {
+      transform: translateY(0px) scaleY(0.98);
+    }
+    100% {
+      transform: translateY(0px) scaleY(0.98);
+    }
+  }
+
+  @keyframes arcade-flash {
+    0%, 100% {
+      filter: brightness(1) contrast(1);
+    }
+    50% {
+      filter: brightness(1.3) contrast(1.2);
+    }
+  }
+
+  @keyframes retro-pulse {
+    0%, 100% {
+      text-shadow: 3px 3px 0px currentColor;
+      filter: brightness(1);
+    }
+    50% {
+      text-shadow: 3px 3px 0px currentColor, 6px 6px 0px rgba(255, 20, 147, 0.5);
+      filter: brightness(1.2);
+    }
+  }
+
+  @keyframes chromatic-aberration {
+    0%, 100% {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    50% {
+      clip-path: polygon(1px 0, 100% 1px, 100% calc(100% - 1px), 0 100%);
+    }
+  }
+
+  [data-style="retro"] .glitch-effect {
+    animation: chromatic-aberration 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  }
+
+  [data-style="retro"] .text-glow,
+  [data-style="retro"] .text-glow-green {
+    animation: retro-pulse 1s ease-in-out infinite;
+    font-family: 'Press Start 2P', cursive !important;
+  }
+
+  [data-style="retro"] .glow-pulse {
+    animation: arcade-flash 0.8s ease-in-out infinite;
+    box-shadow: 2px 2px 0px currentColor, 4px 4px 0px rgba(180, 100, 255, 0.3) !important;
+  }
+
+  [data-style="retro"] body {
+    animation: low-fps 0.5s steps(8, end) infinite;
+  }
+
+  /* RETRO specific glow colors */
+  [data-style="retro"] .text-glow-green {
+    text-shadow: 
+      3px 3px 0px #0f0,
+      6px 6px 0px rgba(0, 255, 0, 0.3),
+      9px 9px 0px rgba(0, 255, 0, 0.1) !important;
+  }
+
+  [data-style="retro"] .text-glow-cyan {
+    text-shadow: 
+      3px 3px 0px #0ff,
+      6px 6px 0px rgba(0, 255, 255, 0.3),
+      9px 9px 0px rgba(0, 255, 255, 0.1) !important;
+  }
+
+  [data-style="retro"] .text-glow-red {
+    text-shadow: 
+      3px 3px 0px #f00,
+      6px 6px 0px rgba(255, 0, 0, 0.3),
+      9px 9px 0px rgba(255, 0, 0, 0.1) !important;
   }
 }
