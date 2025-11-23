@@ -1,0 +1,23 @@
+
+Añadir Login de Usuario (Auth) y una Base de Datos (DB) es el paso que transforma tu proyecto de ser un "juego casual para jugar un rato" a una "plataforma seria y profesional".
+Ahora mismo, tu juego guarda el progreso en el navegador (localStorage). Si un jugador borra las cookies o cambia de ordenador, pierde todo.
+Aquí tienes exactamente para qué te servirían estas dos cosas en NeuroSpy:
+1. "Cross-Device Save" (La Nube)
+Sin DB: Tu amigo juega en su PC y sube al Nivel 5. Luego va a tu casa y quiere jugar desde su móvil. En el móvil es Nivel 1 otra vez.
+Con DB: Tu amigo se loguea con Google en su móvil y ¡BOOM! Ahí está su Nivel 5, sus avatares desbloqueados y su tema "Matrix Retro".
+Valor: Esto es fundamental para retener a los jugadores. Nadie quiere grindear niveles si sabe que los perderá al cambiar de dispositivo.
+2. Rankings Globales (Leaderboards)
+Sin DB: Solo sabes quién gana en tu partida.
+Con DB: Puedes crear una pantalla de "Mejores Hackers del Mundo".
+Ejemplo: "Top 10 jugadores con más victorias como Impostor este mes".
+Valor: Fomenta la competitividad extrema. La gente jugará solo para ver su nombre en esa lista.
+3. Seguridad Anti-Trampas (Anti-Cheat)
+Sin DB: Cualquiera que sepa un poco de informática puede abrir la consola del navegador (F12), editar el localStorage y ponerse Nivel 100 y todos los temas desbloqueados en 5 segundos.
+Con DB: Los datos están en tu servidor (Base de Datos). El jugador no puede tocarlos. Si intenta hackear su nivel localmente, el servidor dirá: "No, en mi base de datos eres Nivel 2" y lo corregirá.
+4. Historial de Partidas (Match History)
+Con DB: Podrías guardar un registro de cada partida jugada.
+"Hace 2 días ganaste como Impostor usando la palabra 'Gato'. Duración: 5min. Votos: 3-1."
+Valor: A los jugadores les encanta ver sus estadísticas detalladas (Winrate, rol preferido, etc.).
+5. Lista de Amigos y Matchmaking
+Sin DB: Tienes que mandar códigos por WhatsApp (XJ92).
+Con DB: Podrías tener una lista de amigos dentro del juego. Si ves a tu amigo conectado, le das a un botón "Invitar" y le sale una notificación en su pantalla para unirse sin códigos.

@@ -168,7 +168,8 @@ function AppContent() {
   }));
 
   // Conditional rendering with early returns (NOW allowed after all hooks)
-  if (authLoading) {
+  // ALWAYS show login if no user - even during loading
+  if (authLoading && !user) {
     return (
       <div className="min-h-screen flex items-center justify-center scanline">
         <div className="text-xl font-mono text-primary">CONNECTING...</div>
