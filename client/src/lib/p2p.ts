@@ -55,9 +55,9 @@ export class P2PManager {
     return new Promise((resolve, reject) => {
       try {
         this.peer = new Peer(this.roomCode, {
-          host: window.location.hostname,
-          port: parseInt(window.location.port || '5000'),
-          path: '/peerjs',
+          host: 'peerjs-server.herokuapp.com',
+          secure: true,
+          port: 443,
           debug: 3,
         });
 
@@ -98,9 +98,9 @@ export class P2PManager {
     return new Promise((resolve, reject) => {
       try {
         this.peer = new Peer({
-          host: window.location.hostname,
-          port: parseInt(window.location.port || '5000'),
-          path: '/peerjs',
+          host: 'peerjs-server.herokuapp.com',
+          secure: true,
+          port: 443,
           debug: 3,
         });
 
