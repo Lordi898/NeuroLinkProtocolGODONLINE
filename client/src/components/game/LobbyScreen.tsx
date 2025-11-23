@@ -53,7 +53,7 @@ export function LobbyScreen({
       {/* Theme and Language Selectors */}
       <div className="flex gap-4 flex-wrap justify-center">
         <div className="flex flex-col gap-2">
-          <Label className="text-xs">{t('theme')}</Label>
+          <Label className="text-xs text-center">{t('theme')}</Label>
           <Select value={theme} onValueChange={(value) => setTheme(value as 'dark' | 'normal' | 'light')}>
             <SelectTrigger className="w-32">
               <SelectValue />
@@ -67,7 +67,7 @@ export function LobbyScreen({
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label className="text-xs">{t('language')}</Label>
+          <Label className="text-xs text-center">{t('language')}</Label>
           <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'es')}>
             <SelectTrigger className="w-32">
               <SelectValue />
