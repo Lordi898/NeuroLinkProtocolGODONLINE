@@ -587,17 +587,23 @@
   [data-style="futurista"] h5,
   [data-style="futurista"] h6 {
     font-family: 'Orbitron', monospace;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     font-weight: 900;
-    text-shadow: 0 0 20px hsl(190 100% 52%), 0 0 40px hsl(260 90% 65%);
-    line-height: 1.2;
-    font-size: 1.5em;
+    text-shadow: 0 0 15px hsl(190 100% 52%), 0 0 30px hsl(260 90% 65%);
+    line-height: 1.1;
+    margin: 0;
+    padding: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
-  [data-style="futurista"] h1 { font-size: 2.5em; }
-  [data-style="futurista"] h2 { font-size: 2em; }
-  [data-style="futurista"] h3 { font-size: 1.5em; }
+  [data-style="futurista"] h1 { font-size: 1.8em; }
+  [data-style="futurista"] h2 { font-size: 1.4em; }
+  [data-style="futurista"] h3 { font-size: 1.1em; }
+  [data-style="futurista"] h4 { font-size: 1em; }
+  [data-style="futurista"] h5 { font-size: 0.95rem; }
+  [data-style="futurista"] h6 { font-size: 0.9rem; }
 
   /* FUTURISTA body text */
   [data-style="futurista"] body,
@@ -605,31 +611,35 @@
   [data-style="futurista"] span,
   [data-style="futurista"] div {
     font-family: 'Orbitron', monospace;
-    font-size: 0.95rem;
-    letter-spacing: 0.05em;
+    font-size: 0.875rem;
+    letter-spacing: 0.03em;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   /* FUTURISTA buttons - glowing borders and neon styling */
   [data-style="futurista"] button,
   [data-style="futurista"] [role="button"] {
     position: relative;
-    overflow: visible;
+    overflow: hidden;
     font-family: 'Orbitron', monospace !important;
-    font-size: 0.9rem;
+    font-size: 0.8rem !important;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 12px 24px !important;
+    padding: 10px 20px !important;
+    height: auto !important;
+    min-height: auto !important;
     border: 2px solid hsl(190 100% 52%) !important;
-    background: linear-gradient(135deg, hsl(190 100% 52% / 0.15), hsl(260 90% 65% / 0.15)) !important;
+    background: linear-gradient(135deg, hsl(190 100% 52% / 0.1), hsl(260 90% 65% / 0.1)) !important;
     color: hsl(190 100% 85%) !important;
-    box-shadow: inset 0 0 10px hsl(190 100% 52% / 0.2), 0 0 20px hsl(190 100% 52% / 0.3) !important;
+    box-shadow: inset 0 0 8px hsl(190 100% 52% / 0.15), 0 0 15px hsl(190 100% 52% / 0.2) !important;
   }
 
   [data-style="futurista"] button:hover,
   [data-style="futurista"] [role="button"]:hover {
-    background: linear-gradient(135deg, hsl(190 100% 52% / 0.3), hsl(260 90% 65% / 0.3)) !important;
-    box-shadow: inset 0 0 15px hsl(190 100% 52% / 0.4), 0 0 30px hsl(190 100% 52% / 0.5), 0 0 50px hsl(260 90% 65% / 0.3) !important;
+    background: linear-gradient(135deg, hsl(190 100% 52% / 0.2), hsl(260 90% 65% / 0.2)) !important;
+    box-shadow: inset 0 0 12px hsl(190 100% 52% / 0.3), 0 0 25px hsl(190 100% 52% / 0.4), 0 0 40px hsl(260 90% 65% / 0.2) !important;
   }
 
   /* FUTURISTA inputs */
@@ -637,20 +647,22 @@
   [data-style="futurista"] textarea,
   [data-style="futurista"] select {
     font-family: 'Orbitron', monospace !important;
-    font-size: 0.9rem !important;
-    letter-spacing: 0.05em !important;
-    padding: 10px 16px !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.03em !important;
+    padding: 8px 12px !important;
+    min-height: auto !important;
+    height: auto !important;
     border: 2px solid hsl(190 100% 52%) !important;
-    background: hsl(190 100% 5% / 0.8) !important;
+    background: hsl(190 100% 8% / 0.7) !important;
     color: hsl(190 100% 85%) !important;
-    box-shadow: inset 0 0 8px hsl(190 100% 52% / 0.2), 0 0 15px hsl(190 100% 52% / 0.2) !important;
+    box-shadow: inset 0 0 6px hsl(190 100% 52% / 0.15), 0 0 12px hsl(190 100% 52% / 0.15) !important;
   }
 
   [data-style="futurista"] input:focus,
   [data-style="futurista"] textarea:focus,
   [data-style="futurista"] select:focus {
     outline: none !important;
-    box-shadow: inset 0 0 12px hsl(190 100% 52% / 0.4), 0 0 30px hsl(190 100% 52% / 0.4), 0 0 50px hsl(260 90% 65% / 0.2) !important;
+    box-shadow: inset 0 0 10px hsl(190 100% 52% / 0.3), 0 0 20px hsl(190 100% 52% / 0.3), 0 0 35px hsl(260 90% 65% / 0.15) !important;
     border-color: hsl(260 90% 65%) !important;
   }
 
@@ -659,12 +671,13 @@
   [data-style="futurista"] [class*="Card"],
   [data-style="futurista"] .panel {
     border: 2px solid hsl(190 100% 52%) !important;
-    background: linear-gradient(135deg, hsl(190 100% 10% / 0.4), hsl(260 90% 20% / 0.2)) !important;
+    background: linear-gradient(135deg, hsl(190 100% 8% / 0.3), hsl(260 90% 15% / 0.15)) !important;
     box-shadow: 
-      inset 0 0 15px hsl(190 100% 52% / 0.15),
-      0 0 25px hsl(190 100% 52% / 0.25),
-      0 0 50px hsl(260 90% 65% / 0.15) !important;
+      inset 0 0 12px hsl(190 100% 52% / 0.1),
+      0 0 20px hsl(190 100% 52% / 0.15),
+      0 0 35px hsl(260 90% 65% / 0.1) !important;
     position: relative;
+    margin: 0 !important;
   }
 
   /* RETRO Styles */
