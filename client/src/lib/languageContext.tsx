@@ -78,7 +78,6 @@ const translations = {
     'submitClue': 'SUBMIT CLUE (1-3 WORDS)',
     'enterClue': 'Enter clue...',
     'communications': 'COMMUNICATIONS',
-    'connectedUsers': 'CONNECTED USERS',
     'wordBanned': 'WORD BANNED',
     'secretWordCard': 'SECRET WORD',
     'yourRoleCard': 'YOUR ROLE',
@@ -110,6 +109,11 @@ const translations = {
     'everyRound': 'EVERY ROUND',
     'every2Rounds': 'EVERY 2 ROUNDS',
     'every3Rounds': 'EVERY 3 ROUNDS',
+    
+    // New Theme Unlocks
+    'matrixRetroUnlocked': 'NEW THEME UNLOCKED: MATRIX RETRO',
+    'obsidianLuxUnlocked': 'NEW THEME UNLOCKED: OBSIDIAN LUX',
+    'quantumDivinityUnlocked': 'NEW THEME UNLOCKED: QUANTUM DIVINITY',
   },
   es: {
     // Join Screen
@@ -173,7 +177,6 @@ const translations = {
     'submitClue': 'ENVIAR PISTA (1-3 PALABRAS)',
     'enterClue': 'Introduce pista...',
     'communications': 'COMUNICACIONES',
-    'connectedUsers': 'USUARIOS CONECTADOS',
     'wordBanned': 'PALABRA PROHIBIDA',
     'secretWordCard': 'PALABRA SECRETA',
     'yourRoleCard': 'TU ROL',
@@ -205,6 +208,11 @@ const translations = {
     'everyRound': 'CADA RONDA',
     'every2Rounds': 'CADA 2 RONDAS',
     'every3Rounds': 'CADA 3 RONDAS',
+    
+    // New Theme Unlocks
+    'matrixRetroUnlocked': 'NUEVO TEMA DESBLOQUEADO: MATRIX RETRO',
+    'obsidianLuxUnlocked': 'NUEVO TEMA DESBLOQUEADO: OBSIDIAN LUX',
+    'quantumDivinityUnlocked': 'NUEVO TEMA DESBLOQUEADO: QUANTUM DIVINITY',
   }
 };
 

@@ -128,147 +128,147 @@ function App() {
         <ProgressionProvider>
           <TooltipProvider>
             <div className="min-h-screen bg-background text-foreground">
-          {gameState.phase === 'join' && (
-            <JoinScreen
-              onCreateRoom={handleCreateRoom}
-              onJoinRoom={handleJoinRoom}
-            />
-          )}
+              {gameState.phase === 'join' && (
+                <JoinScreen
+                  onCreateRoom={handleCreateRoom}
+                  onJoinRoom={handleJoinRoom}
+                />
+              )}
 
-          {gameState.phase === 'lobby' && (
-            <LobbyScreen
-              roomCode={gameState.roomCode}
-              players={playersWithSignal}
-              isHost={isHost}
-              onStartGame={handleStartGame}
-              playOnHost={gameState.playOnHost}
-              onPlayOnHostChange={handlePlayOnHostChange}
-              chatMessages={gameState.chatMessages}
-              onSendChatMessage={handleSendChatMessage}
-              localPlayerId={gameState.localPlayerId}
-              votingFrequency={gameState.votingFrequency}
-              onVotingFrequencyChange={handleSetVotingFrequency}
-              onKickPlayer={handleKickPlayer}
-            />
-          )}
+              {gameState.phase === 'lobby' && (
+                <LobbyScreen
+                  roomCode={gameState.roomCode}
+                  players={playersWithSignal}
+                  isHost={isHost}
+                  onStartGame={handleStartGame}
+                  playOnHost={gameState.playOnHost}
+                  onPlayOnHostChange={handlePlayOnHostChange}
+                  chatMessages={gameState.chatMessages}
+                  onSendChatMessage={handleSendChatMessage}
+                  localPlayerId={gameState.localPlayerId}
+                  votingFrequency={gameState.votingFrequency}
+                  onVotingFrequencyChange={handleSetVotingFrequency}
+                  onKickPlayer={handleKickPlayer}
+                />
+              )}
 
-          {gameState.phase === 'role-reveal' && (
-            <RoleRevealScreen
-              isImpostor={isImpostor}
-              secretWord={gameState.secretWord?.word}
-              category={gameState.secretWord?.category}
-              onRevealComplete={() => {}}
-            />
-          )}
+              {gameState.phase === 'role-reveal' && (
+                <RoleRevealScreen
+                  isImpostor={isImpostor}
+                  secretWord={gameState.secretWord?.word}
+                  category={gameState.secretWord?.category}
+                  onRevealComplete={() => {}}
+                />
+              )}
 
-          {gameState.phase === 'gameplay' && (
-            <GameplayScreen
-              players={playersWithSignal}
-              activePlayerId={gameState.activePlayerId || ''}
-              timeRemaining={gameState.turnTimeRemaining}
-              isImpostor={isImpostor}
-              isMyTurn={isMyTurn}
-              secretWord={gameState.secretWord?.word}
-              category={gameState.secretWord?.category}
-              onNoiseBomb={isImpostor ? handleNoiseBomb : undefined}
-              onEndTurn={handleEndTurn}
-              onSubmitClue={isMyTurn ? handleSubmitClue : undefined}
-              chatMessages={gameState.chatMessages}
-              onSendChatMessage={handleSendChatMessage}
-              localPlayerId={gameState.localPlayerId}
-            />
-          )}
+              {gameState.phase === 'gameplay' && (
+                <GameplayScreen
+                  players={playersWithSignal}
+                  activePlayerId={gameState.activePlayerId || ''}
+                  timeRemaining={gameState.turnTimeRemaining}
+                  isImpostor={isImpostor}
+                  isMyTurn={isMyTurn}
+                  secretWord={gameState.secretWord?.word}
+                  category={gameState.secretWord?.category}
+                  onNoiseBomb={isImpostor ? handleNoiseBomb : undefined}
+                  onEndTurn={handleEndTurn}
+                  onSubmitClue={isMyTurn ? handleSubmitClue : undefined}
+                  chatMessages={gameState.chatMessages}
+                  onSendChatMessage={handleSendChatMessage}
+                  localPlayerId={gameState.localPlayerId}
+                />
+              )}
 
-          {gameState.phase === 'clue-display' && (
-            <ClueDisplayScreen clue={gameState.currentClue} />
-          )}
+              {gameState.phase === 'clue-display' && (
+                <ClueDisplayScreen clue={gameState.currentClue} />
+              )}
 
-          {gameState.phase === 'voting' && gameState.votingTimeRemaining > 0 && (
-            <ObligatoryVotingScreen
-              players={playersWithSignal}
-              onVote={handleCastVote}
-              votedPlayerId={localPlayer?.votedFor}
-              timeRemaining={gameState.votingTimeRemaining}
-              chatMessages={gameState.chatMessages}
-              onSendChatMessage={handleSendChatMessage}
-              localPlayerId={gameState.localPlayerId}
-            />
-          )}
+              {gameState.phase === 'voting' && gameState.votingTimeRemaining > 0 && (
+                <ObligatoryVotingScreen
+                  players={playersWithSignal}
+                  onVote={handleCastVote}
+                  votedPlayerId={localPlayer?.votedFor}
+                  timeRemaining={gameState.votingTimeRemaining}
+                  chatMessages={gameState.chatMessages}
+                  onSendChatMessage={handleSendChatMessage}
+                  localPlayerId={gameState.localPlayerId}
+                />
+              )}
 
-          {gameState.phase === 'voting' && gameState.votingTimeRemaining <= 0 && (
-            <VotingScreen
-              players={playersWithSignal}
-              onVote={handleCastVote}
-              votedPlayerId={localPlayer?.votedFor}
-            />
-          )}
+              {gameState.phase === 'voting' && gameState.votingTimeRemaining <= 0 && (
+                <VotingScreen
+                  players={playersWithSignal}
+                  onVote={handleCastVote}
+                  votedPlayerId={localPlayer?.votedFor}
+                />
+              )}
 
-          {gameState.phase === 'voting-results' && (
-            <VotingResultsScreen 
-              results={gameState.votingResults}
-              hasEliminatedPlayer={gameState.votingResults.length > 0 && gameState.votingResults[0].voteCount > gameState.votingResults.filter(r => r.voteCount === gameState.votingResults[0].voteCount).length === 1}
-            />
-          )}
+              {gameState.phase === 'voting-results' && (
+                <VotingResultsScreen 
+                  results={gameState.votingResults}
+                  hasEliminatedPlayer={gameState.votingResults.length > 0 && gameState.votingResults[0].voteCount > (gameState.votingResults.filter(r => r.voteCount === gameState.votingResults[0].voteCount).length === 1 ? 1 : 0)}
+                />
+              )}
 
-          {gameState.phase === 'game-over' && impostorPlayer && (
-            <GameOverScreen
-              winner={gameState.winner || 'hackers'}
-              impostorPlayer={impostorPlayer}
-              onPlayAgain={handlePlayAgain}
-              onBackToLobby={handleBackToLobby}
-            />
-          )}
-        </div>
+              {gameState.phase === 'game-over' && impostorPlayer && (
+                <GameOverScreen
+                  winner={gameState.winner || 'hackers'}
+                  impostorPlayer={impostorPlayer}
+                  onPlayAgain={handlePlayAgain}
+                  onBackToLobby={handleBackToLobby}
+                />
+              )}
+            </div>
 
-        {process.env.NODE_ENV === 'development' && (
-          <div className="fixed bottom-4 right-4 z-50 flex gap-2 flex-wrap max-w-xs">
-            <button
-              onClick={() => gameController.getState().phase = 'join'}
-              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-              data-testid="debug-join"
-            >
-              JOIN
-            </button>
-            <button
-              onClick={() => setGameState({ ...gameState, phase: 'lobby' })}
-              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-              data-testid="debug-lobby"
-            >
-              LOBBY
-            </button>
-            <button
-              onClick={() => setGameState({ ...gameState, phase: 'role-reveal' })}
-              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-              data-testid="debug-reveal"
-            >
-              REVEAL
-            </button>
-            <button
-              onClick={() => setGameState({ ...gameState, phase: 'gameplay' })}
-              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-              data-testid="debug-gameplay"
-            >
-              PLAY
-            </button>
-            <button
-              onClick={() => setGameState({ ...gameState, phase: 'voting' })}
-              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-              data-testid="debug-voting"
-            >
-              VOTE
-            </button>
-            <button
-              onClick={() => setGameState({ ...gameState, phase: 'game-over' })}
-              className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-              data-testid="debug-gameover"
-            >
-              END
-            </button>
-          </div>
-        )}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="fixed bottom-4 right-4 z-50 flex gap-2 flex-wrap max-w-xs">
+                <button
+                  onClick={() => gameController.getState().phase = 'join'}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-join"
+                >
+                  JOIN
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'lobby' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-lobby"
+                >
+                  LOBBY
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'role-reveal' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-reveal"
+                >
+                  REVEAL
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'gameplay' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-gameplay"
+                >
+                  PLAY
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'voting' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-voting"
+                >
+                  VOTE
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'game-over' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-gameover"
+                >
+                  END
+                </button>
+              </div>
+            )}
 
-              <Toaster />
-            </TooltipProvider>
+            <Toaster />
+          </TooltipProvider>
         </ProgressionProvider>
       </LanguageProvider>
     </QueryClientProvider>

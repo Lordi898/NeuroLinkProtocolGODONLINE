@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '@/lib/languageContext';
-import { useProgression } from '@/lib/progressionContext';
 
 interface JoinScreenProps {
   onCreateRoom: (playerName: string) => void;
@@ -21,7 +20,6 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile }: JoinScreenPr
   const [adminCode, setAdminCode] = useState('');
   const [mode, setMode] = useState<'menu' | 'create' | 'join' | 'admin'>('menu');
   const { language, setLanguage, theme, setTheme, styleMode, setStyleMode, t } = useLanguage();
-  const { profile } = useProgression();
   const [isAdminMode, setIsAdminMode] = useState(false);
 
   const handleAdminCode = () => {
@@ -117,7 +115,51 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile }: JoinScreenPr
           >
             {t('joinGame')}
           </NeonButton>
+          <NeonButton 
+            variant="outline"
+            size="lg"
+            onClick={() => setMode('admin')}
+            data-testid="button-admin-mode"
+            className="w-full"
+          >
+            ADMIN
+          </NeonButton>
         </div>
+      )}
+      {mode === 'admin' && (
+        <TerminalCard title="ADMIN CODE" className="w-full max-w-md">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="admin-code" className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[12px]">ENTER ADMIN CODE</Label>
+              <Input
+                id="admin-code"
+                value={adminCode}
+                onChange={(e) => setAdminCode(e.target.value.toUpperCase())}
+                placeholder="ADMIN CODE"
+                className="uppercase"
+                type="password"
+                data-testid="input-admin-code"
+              />
+            </div>
+            <div className="flex gap-2">
+              <NeonButton 
+                onClick={handleAdminCode}
+                disabled={!adminCode.trim()}
+                data-testid="button-confirm-admin"
+                className="flex-1"
+              >
+                CONFIRM
+              </NeonButton>
+              <NeonButton 
+                variant="outline"
+                onClick={() => setMode('menu')}
+                data-testid="button-back-admin"
+              >
+                {t('back')}
+              </NeonButton>
+            </div>
+          </div>
+        </TerminalCard>
       )}
       {mode === 'create' && (
         <TerminalCard title={t('hostNewGame')} className="w-full max-w-md">
@@ -174,13 +216,18 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile }: JoinScreenPr
               <Input
                 id="room-code"
                 value={roomCode}
-                onChange={(e) => setRoomCode(e.target.value)}
+                onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
                 placeholder={t('enterRoomCode')}
                 className="uppercase"
                 maxLength={10}
                 data-testid="input-room-code"
               />
             </div>
+            {isAdminMode && (
+              <div className="p-2 border border-primary/50 bg-primary/10 text-xs text-primary">
+                ADMIN MODE ACTIVE - You can bypass 3-player minimum
+              </div>
+            )}
             <div className="flex gap-2">
               <NeonButton 
                 onClick={handleJoinRoom}
