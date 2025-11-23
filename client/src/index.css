@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Playfair+Display:wght@400;700&family=Rajdhani:wght@400;600&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Playfair+Display:wght@400;700&family=Rajdhani:wght@400;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -454,15 +454,14 @@
   --chart-3: 0 100% 60%;
   --chart-4: 60 100% 50%;
   --chart-5: 50 100% 50%;
-  --font-sans: 'VT323', monospace;
-  --font-serif: 'VT323', monospace;
-  --font-mono: 'VT323', monospace;
+  --font-sans: 'Press Start 2P', cursive;
+  --font-serif: 'Press Start 2P', cursive;
+  --font-mono: 'Press Start 2P', cursive;
 }
 
 [data-style="retro"][data-theme="dark"] * {
-  font-family: 'VT323', monospace !important;
-  letter-spacing: 0.05em;
-  font-size: 1.1em;
+  font-family: 'Press Start 2P', cursive !important;
+  letter-spacing: 0.03em;
 }
 
 [data-style="retro"][data-theme="dark"] h1 {
@@ -494,8 +493,7 @@
 [data-style="retro"][data-theme="dark"] button,
 [data-style="retro"][data-theme="dark"] input,
 [data-style="retro"][data-theme="dark"] textarea {
-  font-family: 'VT323', monospace;
-  font-size: 1.15em;
+  font-family: 'Press Start 2P', cursive;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
@@ -546,15 +544,11 @@
   --chart-3: 0 100% 52%;
   --chart-4: 60 100% 50%;
   --chart-5: 50 100% 50%;
-  --font-sans: 'VT323', monospace;
-  --font-serif: 'VT323', monospace;
-  --font-mono: 'VT323', monospace;
 }
 
 [data-style="retro"][data-theme="normal"] * {
-  font-family: 'VT323', monospace !important;
-  letter-spacing: 0.05em;
-  font-size: 1.1em;
+  font-family: 'Press Start 2P', cursive !important;
+  letter-spacing: 0.03em;
 }
 
 [data-style="retro"][data-theme="normal"] h1 {
@@ -586,8 +580,7 @@
 [data-style="retro"][data-theme="normal"] button,
 [data-style="retro"][data-theme="normal"] input,
 [data-style="retro"][data-theme="normal"] textarea {
-  font-family: 'VT323', monospace;
-  font-size: 1.15em;
+  font-family: 'Press Start 2P', cursive;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
