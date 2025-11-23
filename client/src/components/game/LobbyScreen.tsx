@@ -172,7 +172,7 @@ export function LobbyScreen({
         </div>
       </div>
 
-      {isHost && players.length >= 3 && (
+      {isHost && (players.length >= 3 || adminMode) && (
         <NeonButton 
           size="lg"
           onClick={onStartGame}
@@ -183,9 +183,15 @@ export function LobbyScreen({
         </NeonButton>
       )}
 
-      {isHost && players.length < 3 && (
+      {isHost && players.length < 3 && !adminMode && (
         <p className="text-muted-foreground text-sm">
           {t('minimumPlayers')}
+        </p>
+      )}
+
+      {isHost && adminMode && players.length < 3 && (
+        <p className="text-secondary text-sm">
+          ADMIN MODE: 1v1 ENABLED
         </p>
       )}
     </div>

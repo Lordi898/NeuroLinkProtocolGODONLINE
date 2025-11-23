@@ -157,6 +157,7 @@ function App() {
                   votingFrequency={gameState.votingFrequency}
                   onVotingFrequencyChange={handleSetVotingFrequency}
                   onKickPlayer={handleKickPlayer}
+                  adminMode={gameState.adminMode}
                 />
               )}
 
