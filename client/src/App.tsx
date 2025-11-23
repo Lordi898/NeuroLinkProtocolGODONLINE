@@ -9,7 +9,10 @@ import { JoinScreen } from "@/components/game/JoinScreen";
 import { LobbyScreen } from "@/components/game/LobbyScreen";
 import { RoleRevealScreen } from "@/components/game/RoleRevealScreen";
 import { GameplayScreen } from "@/components/game/GameplayScreen";
+import { ClueDisplayScreen } from "@/components/game/ClueDisplayScreen";
+import { ObligatoryVotingScreen } from "@/components/game/ObligatoryVotingScreen";
 import { VotingScreen } from "@/components/game/VotingScreen";
+import { VotingResultsScreen } from "@/components/game/VotingResultsScreen";
 import { GameOverScreen } from "@/components/game/GameOverScreen";
 import { GameController } from "@/lib/gameController";
 import { type GameState } from "@/lib/gameState";
@@ -71,6 +74,10 @@ function App() {
     gameController.endTurn();
   };
 
+  const handleSubmitClue = (clueText: string) => {
+    gameController.submitClue(clueText);
+  };
+
   const handleCastVote = (targetId: string) => {
     gameController.castVote(targetId);
   };
@@ -93,6 +100,14 @@ function App() {
 
   const handleSendChatMessage = (text: string) => {
     gameController.sendChatMessage(text);
+  };
+
+  const handleKickPlayer = (playerId: string) => {
+    gameController.kickPlayer(playerId);
+  };
+
+  const handleSetVotingFrequency = (frequency: number) => {
+    gameController.setVotingFrequency(frequency);
   };
 
   const localPlayer = gameState.players.find(p => p.id === gameState.localPlayerId);
@@ -129,6 +144,9 @@ function App() {
               chatMessages={gameState.chatMessages}
               onSendChatMessage={handleSendChatMessage}
               localPlayerId={gameState.localPlayerId}
+              votingFrequency={gameState.votingFrequency}
+              onVotingFrequencyChange={handleSetVotingFrequency}
+              onKickPlayer={handleKickPlayer}
             />
           )}
 
@@ -152,17 +170,41 @@ function App() {
               category={gameState.secretWord?.category}
               onNoiseBomb={isImpostor ? handleNoiseBomb : undefined}
               onEndTurn={handleEndTurn}
+              onSubmitClue={isMyTurn ? handleSubmitClue : undefined}
               chatMessages={gameState.chatMessages}
               onSendChatMessage={handleSendChatMessage}
               localPlayerId={gameState.localPlayerId}
             />
           )}
 
-          {gameState.phase === 'voting' && (
+          {gameState.phase === 'clue-display' && (
+            <ClueDisplayScreen clue={gameState.currentClue} />
+          )}
+
+          {gameState.phase === 'voting' && gameState.votingTimeRemaining > 0 && (
+            <ObligatoryVotingScreen
+              players={playersWithSignal}
+              onVote={handleCastVote}
+              votedPlayerId={localPlayer?.votedFor}
+              timeRemaining={gameState.votingTimeRemaining}
+              chatMessages={gameState.chatMessages}
+              onSendChatMessage={handleSendChatMessage}
+              localPlayerId={gameState.localPlayerId}
+            />
+          )}
+
+          {gameState.phase === 'voting' && gameState.votingTimeRemaining <= 0 && (
             <VotingScreen
               players={playersWithSignal}
               onVote={handleCastVote}
               votedPlayerId={localPlayer?.votedFor}
+            />
+          )}
+
+          {gameState.phase === 'voting-results' && (
+            <VotingResultsScreen 
+              results={gameState.votingResults}
+              hasEliminatedPlayer={gameState.votingResults.length > 0 && gameState.votingResults[0].voteCount > gameState.votingResults.filter(r => r.voteCount === gameState.votingResults[0].voteCount).length === 1}
             />
           )}
 

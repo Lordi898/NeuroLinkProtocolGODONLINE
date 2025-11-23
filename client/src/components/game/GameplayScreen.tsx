@@ -1,3 +1,4 @@
+import React from 'react';
 import { TimerDisplay } from '../TimerDisplay';
 import { PlayerList, type Player } from '../PlayerList';
 import { TerminalCard } from '../TerminalCard';
@@ -16,6 +17,7 @@ interface GameplayScreenProps {
   category?: string;
   onNoiseBomb?: () => void;
   onEndTurn: () => void;
+  onSubmitClue?: (clue: string) => void;
   chatMessages: ChatMessage[];
   onSendChatMessage: (text: string) => void;
   localPlayerId: string;
@@ -31,10 +33,12 @@ export function GameplayScreen({
   category,
   onNoiseBomb,
   onEndTurn,
+  onSubmitClue,
   chatMessages,
   onSendChatMessage,
   localPlayerId
 }: GameplayScreenProps) {
+  const [clueText, setClueText] = React.useState('');
   const activePlayer = players.find(p => p.id === activePlayerId);
 
   return (
@@ -90,19 +94,42 @@ export function GameplayScreen({
         </TerminalCard>
       </div>
 
+      {/* Clue Input - Only for active player */}
+      {isMyTurn && onSubmitClue && (
+        <div className="max-w-md mx-auto w-full px-4">
+          <TerminalCard title="SUBMIT CLUE (1-3 WORDS)">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={clueText}
+                onChange={(e) => setClueText(e.target.value.slice(0, 50))}
+                placeholder="Enter clue..."
+                maxLength={50}
+                className="flex-1 px-3 py-2 rounded bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                data-testid="input-clue"
+              />
+              <NeonButton
+                onClick={() => {
+                  if (clueText.trim()) {
+                    onSubmitClue(clueText);
+                    setClueText('');
+                  }
+                }}
+                disabled={!clueText.trim()}
+                size="lg"
+                className="touch-manipulation min-h-[48px]"
+                data-testid="button-submit-clue"
+              >
+                SEND
+              </NeonButton>
+            </div>
+          </TerminalCard>
+        </div>
+      )}
+
       {/* Botones de acción - Prioridad en móvil */}
-      {(isMyTurn || (isImpostor && onNoiseBomb)) && (
+      {(isImpostor && onNoiseBomb) && (
         <div className="flex gap-3 md:gap-4 justify-center flex-wrap max-w-md mx-auto w-full px-4">
-          {isMyTurn && (
-            <NeonButton 
-              onClick={onEndTurn}
-              data-testid="button-end-turn"
-              size="lg"
-              className="flex-1 min-w-[140px] touch-manipulation min-h-[48px]"
-            >
-              END TURN
-            </NeonButton>
-          )}
           {isImpostor && onNoiseBomb && (
             <NeonButton 
               neonColor="red"

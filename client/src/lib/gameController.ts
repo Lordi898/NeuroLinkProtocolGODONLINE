@@ -74,8 +74,14 @@ export class GameController {
       case 'turn-end':
         this.handleTurnEnd();
         break;
+      case 'clue-display':
+        this.handleClueDisplay(message);
+        break;
       case 'vote-cast':
         this.handleVoteCast(message);
+        break;
+      case 'voting-results':
+        this.handleVotingResults(message);
         break;
       case 'game-over':
         this.handleGameOver(message);
@@ -85,6 +91,9 @@ export class GameController {
         break;
       case 'chat-message':
         this.handleChatMessage(message);
+        break;
+      case 'player-eliminated':
+        this.handlePlayerEliminated(message);
         break;
     }
   }
@@ -299,14 +308,25 @@ export class GameController {
   private nextTurn(): void {
     const state = this.gameState.getState();
     const eligiblePlayers = state.playOnHost 
-      ? state.players 
-      : state.players.filter(p => !p.isHost);
+      ? state.players.filter(p => !p.isEliminated)
+      : state.players.filter(p => !p.isHost && !p.isEliminated);
 
     const currentIndex = eligiblePlayers.findIndex(p => p.id === state.activePlayerId);
     const nextIndex = (currentIndex + 1) % eligiblePlayers.length;
 
     if (nextIndex === 0) {
-      this.startVoting();
+      this.gameState.incrementRound();
+      const shouldVote = state.currentRound % state.votingFrequency === 0;
+      if (shouldVote) {
+        this.startObligatoryVoting();
+      } else {
+        const nextPlayerId = eligiblePlayers[0].id;
+        this.gameState.startTurn(nextPlayerId);
+        this.p2p.broadcast({
+          type: 'turn-start',
+          data: { playerId: nextPlayerId }
+        });
+      }
     } else {
       const nextPlayerId = eligiblePlayers[nextIndex].id;
       this.gameState.startTurn(nextPlayerId);
@@ -320,6 +340,21 @@ export class GameController {
   private startVoting(): void {
     this.gameState.setPhase('voting');
     soundManager.playSynthSound('timer');
+  }
+
+  private startObligatoryVoting(): void {
+    const state = this.gameState.getState();
+    this.gameState.setState({
+      phase: 'voting',
+      votes: new Map(),
+      votingTimeRemaining: 45,
+      players: state.players.map(p => ({ ...p, hasVoted: false, votedFor: undefined }))
+    });
+    this.gameState.startVotingTimer();
+    this.p2p.broadcast({
+      type: 'voting-start',
+      data: {}
+    });
   }
 
   castVote(targetId: string): void {
@@ -349,31 +384,77 @@ export class GameController {
 
   private checkAllVoted(): void {
     const state = this.gameState.getState();
-    const eligiblePlayers = state.playOnHost 
-      ? state.players 
-      : state.players.filter(p => !p.isHost);
+    const playersToVote = state.players.filter(p => !p.isEliminated);
     
-    const allVoted = eligiblePlayers.every(p => p.hasVoted);
+    const allVoted = playersToVote.every(p => p.hasVoted);
 
     if (allVoted) {
       setTimeout(() => {
-        this.endGame();
+        this.tallyVotesAndShowResults();
       }, 2000);
     }
   }
 
-  private endGame(): void {
-    const eliminatedId = this.gameState.tallyVotes();
+  private tallyVotesAndShowResults(): void {
     const state = this.gameState.getState();
-
-    let winner: 'hackers' | 'impostor';
+    const voteCounts = new Map<string, { count: number; voters: Array<{ voterId: string; voterName: string }> }>();
     
-    if (eliminatedId === state.impostorPlayerId) {
-      winner = 'hackers';
-    } else {
-      winner = 'impostor';
+    state.players.forEach(player => {
+      if (player.votedFor) {
+        const current = voteCounts.get(player.votedFor) || { count: 0, voters: [] };
+        current.count++;
+        current.voters.push({ voterId: player.id, voterName: player.name });
+        voteCounts.set(player.votedFor, current);
+      }
+    });
+
+    const results = Array.from(voteCounts.entries())
+      .map(([playerId, data]) => {
+        const player = state.players.find(p => p.id === playerId);
+        return {
+          playerId,
+          playerName: player?.name || 'UNKNOWN',
+          voteCount: data.count,
+          voters: data.voters
+        };
+      })
+      .sort((a, b) => b.voteCount - a.voteCount);
+
+    this.gameState.setVotingResults(results);
+    this.gameState.setPhase('voting-results');
+    this.p2p.broadcast({
+      type: 'voting-results',
+      data: { results }
+    });
+
+    if (results.length === 0) {
+      setTimeout(() => this.nextTurn(), 3000);
+      return;
     }
 
+    const maxVotes = results[0].voteCount;
+    const topVotedPlayers = results.filter(r => r.voteCount === maxVotes);
+
+    if (topVotedPlayers.length === 1) {
+      const eliminatedId = topVotedPlayers[0].playerId;
+      this.gameState.eliminatePlayer(eliminatedId);
+      
+      const remainingPlayers = state.players.filter(p => p.id !== eliminatedId && !p.isEliminated);
+      const impostor = state.impostorPlayerId;
+      
+      if (eliminatedId === impostor) {
+        this.endGameWithWinner('hackers');
+      } else if (remainingPlayers.length <= 1) {
+        this.endGameWithWinner('impostor');
+      } else {
+        setTimeout(() => this.nextTurn(), 3000);
+      }
+    } else {
+      setTimeout(() => this.nextTurn(), 3000);
+    }
+  }
+
+  private endGameWithWinner(winner: 'hackers' | 'impostor'): void {
     this.gameState.setWinner(winner);
     this.gameState.setPhase('game-over');
 
@@ -383,6 +464,26 @@ export class GameController {
     });
 
     soundManager.playSynthSound(winner === 'hackers' ? 'success' : 'error');
+  }
+
+  private endGame(): void {
+    this.endGameWithWinner('impostor');
+  }
+
+  private handleClueDisplay(message: P2PMessage): void {
+    const { clue } = message.data;
+    this.gameState.addClue(clue);
+    this.gameState.setPhase('clue-display');
+  }
+
+  private handleVotingResults(message: P2PMessage): void {
+    this.gameState.setVotingResults(message.data.results);
+    this.gameState.setPhase('voting-results');
+  }
+
+  private handlePlayerEliminated(message: P2PMessage): void {
+    const { playerId } = message.data;
+    this.gameState.eliminatePlayer(playerId);
   }
 
   private handleGameOver(message: P2PMessage): void {
@@ -463,6 +564,50 @@ export class GameController {
 
   setPlayOnHost(value: boolean): void {
     this.gameState.setState({ playOnHost: value });
+  }
+
+  setVotingFrequency(frequency: number): void {
+    this.gameState.setVotingFrequency(frequency);
+  }
+
+  kickPlayer(playerId: string): void {
+    if (!this.gameState.isLocalPlayerHost()) {
+      console.error('[GAME] Only host can kick players');
+      return;
+    }
+
+    this.gameState.removePlayer(playerId);
+    this.p2p.broadcast({
+      type: 'player-kicked',
+      data: { playerId }
+    });
+  }
+
+  submitClue(clueText: string): void {
+    const state = this.gameState.getState();
+    const player = state.players.find(p => p.id === state.localPlayerId);
+    
+    if (!player || state.activePlayerId !== state.localPlayerId) return;
+
+    const clue = {
+      id: `${state.localPlayerId}-${Date.now()}`,
+      senderId: state.localPlayerId,
+      senderName: player.name,
+      text: clueText.trim(),
+      timestamp: Date.now()
+    };
+
+    this.gameState.addClue(clue);
+    this.p2p.broadcast({
+      type: 'clue-display',
+      data: { clue }
+    });
+
+    this.gameState.setPhase('clue-display');
+    
+    setTimeout(() => {
+      this.endTurn();
+    }, 3000);
   }
 
   getState() {

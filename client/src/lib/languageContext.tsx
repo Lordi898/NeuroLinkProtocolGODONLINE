@@ -74,6 +74,21 @@ const translations = {
     'playAgain': 'PLAY AGAIN',
     'backToLobby': 'BACK TO LOBBY',
     
+    // Clue and Voting
+    'incomingClue': 'INCOMING CLUE',
+    'mandatoryVoting': 'MANDATORY VOTING',
+    'chooseWhoToEliminate': 'CHOOSE WHO TO ELIMINATE',
+    'votingResults': 'VOTING RESULTS',
+    'tieNoElimination': 'TIE - NO ONE ELIMINATED',
+    'eliminated': 'ELIMINATED',
+    'votedBy': 'VOTED BY',
+    'continuingGame': 'CONTINUING GAME',
+    'backToGameplay': 'BACK TO GAMEPLAY',
+    'votingFrequency': 'VOTING FREQUENCY',
+    'everyRound': 'EVERY ROUND',
+    'every2Rounds': 'EVERY 2 ROUNDS',
+    'every3Rounds': 'EVERY 3 ROUNDS',
+
     // Toast messages
     'roomCreated': 'ROOM CREATED',
     'code': 'CODE',
@@ -144,6 +159,21 @@ const translations = {
     'playAgain': 'JUGAR DE NUEVO',
     'backToLobby': 'VOLVER AL LOBBY',
     
+    // Clue and Voting
+    'incomingClue': 'PISTA ENTRANTE',
+    'mandatoryVoting': 'VOTACIÓN OBLIGATORIA',
+    'chooseWhoToEliminate': 'ELIGE A QUIÉN EXPULSAR',
+    'votingResults': 'RESULTADOS DE VOTACIÓN',
+    'tieNoElimination': 'EMPATE - NADIE EXPULSADO',
+    'eliminated': 'EXPULSADO',
+    'votedBy': 'VOTADO POR',
+    'continuingGame': 'CONTINUANDO JUEGO',
+    'backToGameplay': 'VUELTA AL JUEGO',
+    'votingFrequency': 'FRECUENCIA DE VOTACIÓN',
+    'everyRound': 'CADA RONDA',
+    'every2Rounds': 'CADA 2 RONDAS',
+    'every3Rounds': 'CADA 3 RONDAS',
+
     // Toast messages
     'roomCreated': 'SALA CREADA',
     'code': 'CÓDIGO',

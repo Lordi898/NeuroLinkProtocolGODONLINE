@@ -8,6 +8,7 @@ import { Chat } from '../Chat';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { X } from 'lucide-react';
 import { type ChatMessage } from '@/lib/gameState';
 import { useLanguage } from '@/lib/languageContext';
 
@@ -21,6 +22,9 @@ interface LobbyScreenProps {
   chatMessages: ChatMessage[];
   onSendChatMessage: (text: string) => void;
   localPlayerId: string;
+  votingFrequency: number;
+  onVotingFrequencyChange: (frequency: number) => void;
+  onKickPlayer: (playerId: string) => void;
 }
 
 export function LobbyScreen({
@@ -32,7 +36,10 @@ export function LobbyScreen({
   onPlayOnHostChange,
   chatMessages,
   onSendChatMessage,
-  localPlayerId
+  localPlayerId,
+  votingFrequency,
+  onVotingFrequencyChange,
+  onKickPlayer
 }: LobbyScreenProps) {
   const { language, setLanguage, theme, setTheme, t } = useLanguage();
 
@@ -79,23 +86,61 @@ export function LobbyScreen({
           
           {isHost && (
             <TerminalCard title={t('hostSettings')}>
-              <div className="flex items-center justify-between gap-4">
-                <Label htmlFor="play-on-host" className="text-sm">
-                  {t('playOnThisDevice')}
-                </Label>
-                <Switch
-                  id="play-on-host"
-                  checked={playOnHost}
-                  onCheckedChange={onPlayOnHostChange}
-                  data-testid="switch-play-on-host"
-                />
+              <div className="space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <Label htmlFor="play-on-host" className="text-sm">
+                    {t('playOnThisDevice')}
+                  </Label>
+                  <Switch
+                    id="play-on-host"
+                    checked={playOnHost}
+                    onCheckedChange={onPlayOnHostChange}
+                    data-testid="switch-play-on-host"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="voting-freq" className="text-sm">
+                    {t('votingFrequency')}
+                  </Label>
+                  <Select value={votingFrequency.toString()} onValueChange={(val) => onVotingFrequencyChange(parseInt(val))}>
+                    <SelectTrigger id="voting-freq" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">{t('everyRound')}</SelectItem>
+                      <SelectItem value="2">{t('every2Rounds')}</SelectItem>
+                      <SelectItem value="3">{t('every3Rounds')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </TerminalCard>
           )}
         </div>
 
         <TerminalCard title={t('connectedUsers')}>
-          <PlayerList players={players} />
+          <div className="space-y-3">
+            {players.map((player) => (
+              <div key={player.id} className="flex items-center justify-between gap-2 p-3 rounded-md border border-border bg-card/30">
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold truncate text-sm">
+                    {player.name}
+                    {player.isHost && <span className="text-xs ml-2 px-2 py-0.5 bg-secondary/20 text-secondary rounded">HOST</span>}
+                  </p>
+                </div>
+                {isHost && player.id !== localPlayerId && (
+                  <button
+                    onClick={() => onKickPlayer(player.id)}
+                    className="p-1 hover-elevate active-elevate-2 text-destructive"
+                    data-testid={`button-kick-${player.id}`}
+                    title="Kick player"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
           <div className="mt-4 text-center text-sm text-muted-foreground">
             {players.length} / 30 {t('playersCount')}
           </div>

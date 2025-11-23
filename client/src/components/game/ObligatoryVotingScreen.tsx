@@ -3,31 +3,30 @@ import { PlayerAvatar } from '../PlayerAvatar';
 import { TerminalCard } from '../TerminalCard';
 import { GlitchText } from '../GlitchText';
 import { Chat } from '../Chat';
+import { TimerDisplay } from '../TimerDisplay';
 import { type Player } from '../PlayerList';
 import { type ChatMessage } from '@/lib/gameState';
 import { cn } from '@/lib/utils';
 
-interface VotingScreenProps {
+interface ObligatoryVotingScreenProps {
   players: Player[];
   onVote: (playerId: string) => void;
   votedPlayerId?: string;
-  chatMessages?: ChatMessage[];
-  onSendChatMessage?: (text: string) => void;
-  localPlayerId?: string;
-  timeRemaining?: number;
-  showTimer?: boolean;
+  timeRemaining: number;
+  chatMessages: ChatMessage[];
+  onSendChatMessage: (text: string) => void;
+  localPlayerId: string;
 }
 
-export function VotingScreen({ 
-  players, 
-  onVote, 
+export function ObligatoryVotingScreen({
+  players,
+  onVote,
   votedPlayerId,
-  chatMessages = [],
-  onSendChatMessage,
-  localPlayerId = '',
   timeRemaining,
-  showTimer = false
-}: VotingScreenProps) {
+  chatMessages,
+  onSendChatMessage,
+  localPlayerId
+}: ObligatoryVotingScreenProps) {
   const [selectedId, setSelectedId] = useState<string | null>(votedPlayerId || null);
 
   const handleVote = (playerId: string) => {
@@ -37,16 +36,19 @@ export function VotingScreen({
   };
 
   return (
-    <div className={`min-h-screen p-4 md:p-8 flex flex-col gap-${showTimer ? '6' : '8'}`}>
+    <div className="min-h-screen p-4 md:p-8 flex flex-col gap-6">
       <div className="text-center">
         <GlitchText className="text-4xl md:text-6xl block">
-          VOTE TO ELIMINATE
+          MANDATORY VOTING
         </GlitchText>
-        <p className="text-secondary mt-2">SELECT THE SUSPECTED IMPOSTOR</p>
-        {showTimer && timeRemaining !== undefined && (
-          <p className="text-xl text-destructive mt-2 animate-pulse">{timeRemaining}s</p>
-        )}
+        <p className="text-secondary mt-2">CHOOSE WHO TO ELIMINATE</p>
       </div>
+
+      <TimerDisplay 
+        timeRemaining={timeRemaining} 
+        maxTime={45} 
+        className="max-w-md mx-auto w-full"
+      />
 
       <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
@@ -84,23 +86,13 @@ export function VotingScreen({
           </TerminalCard>
         </div>
 
-        {onSendChatMessage && (
-          <Chat
-            messages={chatMessages}
-            onSendMessage={onSendChatMessage}
-            localPlayerId={localPlayerId}
-            className="lg:col-span-1"
-          />
-        )}
+        <Chat
+          messages={chatMessages}
+          onSendMessage={onSendChatMessage}
+          localPlayerId={localPlayerId}
+          className="lg:col-span-1 h-[300px] md:h-[400px]"
+        />
       </div>
-
-      {selectedId && !onSendChatMessage && (
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">
-            WAITING FOR OTHER PLAYERS...
-          </p>
-        </div>
-      )}
     </div>
   );
 }
