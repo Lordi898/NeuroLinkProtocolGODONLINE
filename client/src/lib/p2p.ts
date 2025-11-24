@@ -286,7 +286,7 @@ export class P2PManager {
   }
 
   getTurnRotationOffset(): number {
-    const syncData = this.onGetSyncDataCallback?.() || {};
+    const syncData = this.getSyncDataCallback?.() || {};
     return syncData.turnRotationOffset || 0;
   }
 
