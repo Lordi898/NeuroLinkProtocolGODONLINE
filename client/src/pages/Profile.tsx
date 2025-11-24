@@ -74,7 +74,7 @@ export function Profile({ onBack }: ProfileProps) {
 
         {/* Avatars Grid */}
         {selectedTab === 'avatars' && (
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mb-4 max-h-96 overflow-y-auto">
+          <div className="grid grid-cols-5 gap-2 mb-4 max-h-96 overflow-y-auto">
             {AVATARS.map(avatar => {
               const unlocked = isUnlocked(avatar.id);
               const isSelected = profile.currentAvatar === avatar.id;
@@ -83,7 +83,7 @@ export function Profile({ onBack }: ProfileProps) {
                   key={avatar.id}
                   onClick={() => unlocked && setCurrentAvatar(avatar.id)}
                   disabled={!unlocked}
-                  className={`p-2 md:p-3 border-2 text-center transition-all ${
+                  className={`p-3 border-2 text-center transition-all ${
                     isSelected
                       ? 'border-primary bg-primary/10'
                       : unlocked
@@ -95,13 +95,13 @@ export function Profile({ onBack }: ProfileProps) {
                   <div className="flex flex-col items-center gap-1">
                     {unlocked ? (
                       <>
-                        <Star size={14} className={`${avatar.color}`} />
-                        <p className="text-[9px] md:text-[10px] leading-none truncate w-full">{avatar.name}</p>
+                        <Star size={16} className={`${avatar.color}`} />
+                        <p className="text-[10px] leading-none">{avatar.name}</p>
                       </>
                     ) : (
                       <>
-                        <Lock size={14} className="text-muted-foreground" />
-                        <p className="text-[9px] md:text-[10px] leading-none text-muted-foreground">LV {avatar.unlockLevel}</p>
+                        <Lock size={16} className="text-muted-foreground" />
+                        <p className="text-[10px] leading-none text-muted-foreground">LV {avatar.unlockLevel}</p>
                       </>
                     )}
                   </div>
@@ -113,7 +113,7 @@ export function Profile({ onBack }: ProfileProps) {
 
         {/* Themes Grid */}
         {selectedTab === 'themes' && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          <div className="grid grid-cols-3 gap-4">
             {['hacker', 'futurista', 'retro', 'matrix-retro', 'obsidian-lux', 'quantum-divinity'].map(themeId => {
               const unlocked = isThemeUnlocked(themeId);
               const isSelected = profile.currentTheme === themeId;
@@ -127,7 +127,7 @@ export function Profile({ onBack }: ProfileProps) {
                   key={themeId}
                   onClick={() => unlocked && setCurrentTheme(themeId)}
                   disabled={!unlocked}
-                  className={`p-3 md:p-4 border text-center transition-all cursor-pointer ${
+                  className={`p-4 border text-center transition-all cursor-pointer ${
                     isSelected
                       ? 'border-primary bg-primary/20'
                       : unlocked
@@ -136,9 +136,9 @@ export function Profile({ onBack }: ProfileProps) {
                   }`}
                   data-testid={`theme-${themeId}`}
                 >
-                  <p className="text-[10px] md:text-xs font-bold uppercase mb-2 truncate">{themeId}</p>
+                  <p className="text-xs font-bold uppercase mb-2">{themeId}</p>
                   {!unlocked && conditions[themeId] && (
-                    <p className="text-[9px] md:text-[10px] text-muted-foreground">{conditions[themeId]}</p>
+                    <p className="text-[10px] text-muted-foreground">{conditions[themeId]}</p>
                   )}
                   {unlocked && isSelected && <Trophy size={16} className="mx-auto text-secondary" />}
                 </button>

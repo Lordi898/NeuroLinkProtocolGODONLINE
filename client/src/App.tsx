@@ -6,8 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { LanguageProvider } from "@/lib/languageContext";
 import { ProgressionProvider, useProgression } from "@/lib/progressionContext";
-import { AuthProvider, useAuth } from "@/lib/authContext";
-import { LoginScreen } from "@/components/game/LoginScreen";
 import { JoinScreen } from "@/components/game/JoinScreen";
 import { LobbyScreen } from "@/components/game/LobbyScreen";
 import { RoleRevealScreen } from "@/components/game/RoleRevealScreen";
@@ -17,13 +15,10 @@ import { ObligatoryVotingScreen } from "@/components/game/ObligatoryVotingScreen
 import { VotingScreen } from "@/components/game/VotingScreen";
 import { VotingResultsScreen } from "@/components/game/VotingResultsScreen";
 import { GameOverScreen } from "@/components/game/GameOverScreen";
-import { LeaderboardScreen } from "@/components/game/LeaderboardScreen";
-import { MatchHistoryScreen } from "@/components/game/MatchHistoryScreen";
 import { Profile } from "@/pages/Profile";
 import { GameController } from "@/lib/gameController";
 import { type GameState } from "@/lib/gameState";
 import { type Player } from "@/components/PlayerList";
-import { LogOut } from "lucide-react";
 
 const gameController = new GameController();
 
@@ -37,24 +32,20 @@ function ThemeApplier() {
   return null;
 }
 
-function AppContent() {
-  // All hooks must be called unconditionally BEFORE any returns
-  const { user, loading: authLoading, logout } = useAuth();
+function App() {
   const [gameState, setGameState] = useState<GameState>(gameController.getState());
   const { toast } = useToast();
-  const { profile } = useProgression();
 
-  // Setup game controller
   useEffect(() => {
     gameController.onStateChange((state) => {
       setGameState(state);
     });
+
     return () => {
       gameController.disconnect();
     };
   }, []);
 
-  // Define all handlers BEFORE any conditional returns
   const handleCreateRoom = async (playerName: string, adminMode: boolean = false) => {
     try {
       await gameController.createRoom(playerName);
@@ -157,226 +148,178 @@ function AppContent() {
     setGameState(prev => ({ ...prev, phase: 'join' }));
   };
 
-  // Compute derived values
   const localPlayer = gameState.players.find(p => p.id === gameState.localPlayerId);
   const isHost = gameState.localPlayerId === gameState.hostPlayerId;
   const isImpostor = localPlayer?.isImpostor || false;
   const isMyTurn = gameState.activePlayerId === gameState.localPlayerId;
   const impostorPlayer = gameState.players.find(p => p.id === gameState.impostorPlayerId);
+
   const playersWithSignal: Player[] = gameState.players.map(p => ({
     ...p,
     signalStrength: 100
   }));
 
-  // Conditional rendering with early returns (NOW allowed after all hooks)
-  // ALWAYS show login if no user - even during loading
-  if (authLoading && !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center scanline">
-        <div className="text-xl font-mono text-primary">CONNECTING...</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <LoginScreen onLoginSuccess={() => {}} />;
-  }
-
-  if (gameState.phase === 'leaderboard') {
-    return <LeaderboardScreen onBack={() => setGameState(prev => ({ ...prev, phase: 'join' }))} />;
-  }
-
-  if (gameState.phase === 'match-history') {
-    return <MatchHistoryScreen onBack={() => setGameState(prev => ({ ...prev, phase: 'join' }))} />;
-  }
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* User Header - visible on all screens */}
-      {gameState.phase === 'join' && (
-        <div className="absolute top-4 right-4 flex items-center gap-3 text-xs md:text-sm border border-primary/30 rounded px-4 py-2 bg-background/95 backdrop-blur-sm z-50">
-          <div className="flex flex-col text-right">
-            <span className="text-primary font-mono font-bold" data-testid="text-username">{user?.username || 'USER'}</span>
-            <span className="text-muted-foreground text-xs" data-testid="text-level">LVL {profile?.rankLevel || 1}</span>
-          </div>
-          <button
-            onClick={logout}
-            data-testid="button-logout"
-            className="p-1 hover:bg-primary/20 rounded transition-colors"
-            title="Logout"
-          >
-            <LogOut className="w-4 h-4 text-primary" />
-          </button>
-        </div>
-      )}
-
-      {gameState.phase === 'join' && (
-        <JoinScreen
-          onCreateRoom={handleCreateRoom}
-          onJoinRoom={handleJoinRoom}
-          onProfile={handleViewProfile}
-          onLeaderboard={() => setGameState(prev => ({ ...prev, phase: 'leaderboard' }))}
-          onMatchHistory={() => setGameState(prev => ({ ...prev, phase: 'match-history' }))}
-        />
-      )}
-
-      {gameState.phase === 'profile' && (
-        <Profile onBack={handleBackFromProfile} />
-      )}
-
-      {gameState.phase === 'lobby' && (
-        <LobbyScreen
-          roomCode={gameState.roomCode}
-          players={playersWithSignal}
-          isHost={isHost}
-          onStartGame={handleStartGame}
-          playOnHost={gameState.playOnHost}
-          onPlayOnHostChange={handlePlayOnHostChange}
-          chatMessages={gameState.chatMessages}
-          onSendChatMessage={handleSendChatMessage}
-          localPlayerId={gameState.localPlayerId}
-          votingFrequency={gameState.votingFrequency}
-          onVotingFrequencyChange={handleSetVotingFrequency}
-          onKickPlayer={handleKickPlayer}
-          onLeaveGame={handleLeaveGame}
-          onEndGame={gameState.adminMode ? handleEndGame : undefined}
-          adminMode={gameState.adminMode}
-        />
-      )}
-
-      {gameState.phase === 'role-reveal' && (
-        <RoleRevealScreen
-          isImpostor={isImpostor}
-          secretWord={gameState.secretWord?.word}
-          category={gameState.secretWord?.category}
-          onRevealComplete={() => {}}
-        />
-      )}
-
-      {gameState.phase === 'gameplay' && (
-        <GameplayScreen
-          players={playersWithSignal}
-          activePlayerId={gameState.activePlayerId || ''}
-          timeRemaining={gameState.turnTimeRemaining}
-          isImpostor={isImpostor}
-          isMyTurn={isMyTurn}
-          secretWord={gameState.secretWord?.word}
-          category={gameState.secretWord?.category}
-          onNoiseBomb={isImpostor ? handleNoiseBomb : undefined}
-          onEndTurn={handleEndTurn}
-          onSubmitClue={isMyTurn ? handleSubmitClue : undefined}
-          chatMessages={gameState.chatMessages}
-          onSendChatMessage={handleSendChatMessage}
-          localPlayerId={gameState.localPlayerId}
-        />
-      )}
-
-      {gameState.phase === 'clue-display' && (
-        <ClueDisplayScreen clue={gameState.currentClue} />
-      )}
-
-      {gameState.phase === 'voting' && gameState.votingTimeRemaining > 0 && (
-        <ObligatoryVotingScreen
-          players={playersWithSignal}
-          onVote={handleCastVote}
-          votedPlayerId={localPlayer?.votedFor}
-          timeRemaining={gameState.votingTimeRemaining}
-          chatMessages={gameState.chatMessages}
-          onSendChatMessage={handleSendChatMessage}
-          localPlayerId={gameState.localPlayerId}
-        />
-      )}
-
-      {gameState.phase === 'voting' && gameState.votingTimeRemaining <= 0 && (
-        <VotingScreen
-          players={playersWithSignal}
-          onVote={handleCastVote}
-          votedPlayerId={localPlayer?.votedFor}
-        />
-      )}
-
-      {gameState.phase === 'voting-results' && (
-        <VotingResultsScreen 
-          results={gameState.votingResults}
-          hasEliminatedPlayer={gameState.votingResults.length > 0 && gameState.votingResults[0].voteCount > (gameState.votingResults.filter(r => r.voteCount === gameState.votingResults[0].voteCount).length === 1 ? 1 : 0)}
-        />
-      )}
-
-      {gameState.phase === 'game-over' && impostorPlayer && (
-        <GameOverScreen
-          winner={gameState.winner || 'hackers'}
-          impostorPlayer={impostorPlayer}
-          onPlayAgain={handlePlayAgain}
-          onBackToLobby={handleBackToLobby}
-          isImpostor={isImpostor}
-        />
-      )}
-
-      {gameState.adminMode && (
-        <div className="fixed bottom-4 right-4 z-50 flex gap-2 flex-wrap max-w-xs">
-          <button
-            onClick={() => gameController.getState().phase = 'join'}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-join"
-          >
-            JOIN
-          </button>
-          <button
-            onClick={() => setGameState({ ...gameState, phase: 'lobby' })}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-lobby"
-          >
-            LOBBY
-          </button>
-          <button
-            onClick={() => setGameState({ ...gameState, phase: 'role-reveal' })}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-reveal"
-          >
-            REVEAL
-          </button>
-          <button
-            onClick={() => setGameState({ ...gameState, phase: 'gameplay' })}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-gameplay"
-          >
-            PLAY
-          </button>
-          <button
-            onClick={() => setGameState({ ...gameState, phase: 'voting' })}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-voting"
-          >
-            VOTE
-          </button>
-          <button
-            onClick={() => setGameState({ ...gameState, phase: 'game-over' })}
-            className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
-            data-testid="debug-gameover"
-          >
-            END
-          </button>
-        </div>
-      )}
-
-      <Toaster />
-    </div>
-  );
-}
-
-export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <ProgressionProvider>
           <TooltipProvider>
-            <AuthProvider>
-              <ThemeApplier />
-              <AppContent />
-            </AuthProvider>
+            <ThemeApplier />
+            <div className="min-h-screen bg-background text-foreground">
+              {gameState.phase === 'join' && (
+                <JoinScreen
+                  onCreateRoom={handleCreateRoom}
+                  onJoinRoom={handleJoinRoom}
+                  onProfile={handleViewProfile}
+                />
+              )}
+
+              {gameState.phase === 'profile' && (
+                <Profile onBack={handleBackFromProfile} />
+              )}
+
+              {gameState.phase === 'lobby' && (
+                <LobbyScreen
+                  roomCode={gameState.roomCode}
+                  players={playersWithSignal}
+                  isHost={isHost}
+                  onStartGame={handleStartGame}
+                  playOnHost={gameState.playOnHost}
+                  onPlayOnHostChange={handlePlayOnHostChange}
+                  chatMessages={gameState.chatMessages}
+                  onSendChatMessage={handleSendChatMessage}
+                  localPlayerId={gameState.localPlayerId}
+                  votingFrequency={gameState.votingFrequency}
+                  onVotingFrequencyChange={handleSetVotingFrequency}
+                  onKickPlayer={handleKickPlayer}
+                  onLeaveGame={handleLeaveGame}
+                  onEndGame={gameState.adminMode ? handleEndGame : undefined}
+                  adminMode={gameState.adminMode}
+                />
+              )}
+
+              {gameState.phase === 'role-reveal' && (
+                <RoleRevealScreen
+                  isImpostor={isImpostor}
+                  secretWord={gameState.secretWord?.word}
+                  category={gameState.secretWord?.category}
+                  onRevealComplete={() => {}}
+                />
+              )}
+
+              {gameState.phase === 'gameplay' && (
+                <GameplayScreen
+                  players={playersWithSignal}
+                  activePlayerId={gameState.activePlayerId || ''}
+                  timeRemaining={gameState.turnTimeRemaining}
+                  isImpostor={isImpostor}
+                  isMyTurn={isMyTurn}
+                  secretWord={gameState.secretWord?.word}
+                  category={gameState.secretWord?.category}
+                  onNoiseBomb={isImpostor ? handleNoiseBomb : undefined}
+                  onEndTurn={handleEndTurn}
+                  onSubmitClue={isMyTurn ? handleSubmitClue : undefined}
+                  chatMessages={gameState.chatMessages}
+                  onSendChatMessage={handleSendChatMessage}
+                  localPlayerId={gameState.localPlayerId}
+                />
+              )}
+
+              {gameState.phase === 'clue-display' && (
+                <ClueDisplayScreen clue={gameState.currentClue} />
+              )}
+
+              {gameState.phase === 'voting' && gameState.votingTimeRemaining > 0 && (
+                <ObligatoryVotingScreen
+                  players={playersWithSignal}
+                  onVote={handleCastVote}
+                  votedPlayerId={localPlayer?.votedFor}
+                  timeRemaining={gameState.votingTimeRemaining}
+                  chatMessages={gameState.chatMessages}
+                  onSendChatMessage={handleSendChatMessage}
+                  localPlayerId={gameState.localPlayerId}
+                />
+              )}
+
+              {gameState.phase === 'voting' && gameState.votingTimeRemaining <= 0 && (
+                <VotingScreen
+                  players={playersWithSignal}
+                  onVote={handleCastVote}
+                  votedPlayerId={localPlayer?.votedFor}
+                />
+              )}
+
+              {gameState.phase === 'voting-results' && (
+                <VotingResultsScreen 
+                  results={gameState.votingResults}
+                  hasEliminatedPlayer={gameState.votingResults.length > 0 && gameState.votingResults[0].voteCount > (gameState.votingResults.filter(r => r.voteCount === gameState.votingResults[0].voteCount).length === 1 ? 1 : 0)}
+                />
+              )}
+
+              {gameState.phase === 'game-over' && impostorPlayer && (
+                <GameOverScreen
+                  winner={gameState.winner || 'hackers'}
+                  impostorPlayer={impostorPlayer}
+                  onPlayAgain={handlePlayAgain}
+                  onBackToLobby={handleBackToLobby}
+                  isImpostor={isImpostor}
+                />
+              )}
+            </div>
+
+            {gameState.adminMode && (
+              <div className="fixed bottom-4 right-4 z-50 flex gap-2 flex-wrap max-w-xs">
+                <button
+                  onClick={() => gameController.getState().phase = 'join'}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-join"
+                >
+                  JOIN
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'lobby' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-lobby"
+                >
+                  LOBBY
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'role-reveal' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-reveal"
+                >
+                  REVEAL
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'gameplay' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-gameplay"
+                >
+                  PLAY
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'voting' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-voting"
+                >
+                  VOTE
+                </button>
+                <button
+                  onClick={() => setGameState({ ...gameState, phase: 'game-over' })}
+                  className="px-3 py-1 text-xs bg-primary/20 border border-primary rounded hover-elevate active-elevate-2"
+                  data-testid="debug-gameover"
+                >
+                  END
+                </button>
+              </div>
+            )}
+
+            <Toaster />
           </TooltipProvider>
         </ProgressionProvider>
       </LanguageProvider>
     </QueryClientProvider>
   );
 }
+
+export default App;

@@ -50,49 +50,29 @@ export class P2PManager {
   async createRoom(playerName: string): Promise<string> {
     this.localPlayerName = playerName;
     this.isHost = true;
+    this.roomCode = this.generateRoomCode();
 
-    try {
-      const response = await fetch('/api/rooms/create', { method: 'POST' });
-      const data = await response.json();
-      
-      this.roomCode = data.roomCode;
-      this.localPlayerId = data.playerId;
-      
-      console.log('[P2P] Creating PeerJS instance for host...');
-      
-      // Create Peer instance with this player's ID as the peer ID
-      this.peer = new Peer(this.localPlayerId, {
-        host: window.location.hostname,
-        port: window.location.protocol === 'https:' ? 443 : 80,
-        path: '/peerjs',
-        secure: window.location.protocol === 'https:',
-        debug: 2
+    return new Promise((resolve, reject) => {
+      this.peer = new Peer(this.roomCode, {
+        debug: 2,
       });
-      
-      // Host waits for incoming connections
-      this.peer.on('connection', (conn: DataConnection) => {
+
+      this.peer.on('open', (id) => {
+        this.localPlayerId = id;
+        console.log('[P2P] Room created with code:', this.roomCode);
+        resolve(this.roomCode);
+      });
+
+      this.peer.on('connection', (conn) => {
         this.handleIncomingConnection(conn);
       });
-      
+
       this.peer.on('error', (error) => {
         console.error('[P2P] Peer error:', error);
-        this.onConnectionErrorCallback?.(new Error(`Peer error: ${error}`));
+        this.onConnectionErrorCallback?.(error);
+        reject(error);
       });
-      
-      // Wait for Peer to be ready
-      await new Promise((resolve) => {
-        this.peer!.on('open', (id) => {
-          console.log('[P2P] Peer open, ID:', id);
-          resolve(null);
-        });
-      });
-      
-      console.log('[P2P] Room created with code:', this.roomCode, 'Peer ID:', this.localPlayerId);
-      return this.roomCode;
-    } catch (error) {
-      console.error('[P2P] Error creating room:', error);
-      throw error;
-    }
+    });
   }
 
   async joinRoom(playerName: string, roomCode: string): Promise<void> {
@@ -100,76 +80,45 @@ export class P2PManager {
     this.isHost = false;
     this.roomCode = roomCode;
 
-    try {
-      const response = await fetch('/api/rooms/join', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ roomCode })
+    return new Promise((resolve, reject) => {
+      this.peer = new Peer({
+        debug: 2,
       });
-      
-      if (!response.ok) throw new Error('Failed to join room');
-      
-      const data = await response.json();
-      this.localPlayerId = data.playerId;
-      const hostPlayerId = data.hostPlayerId;
-      
-      console.log('[P2P] Joining room:', roomCode, 'as player:', this.localPlayerId, 'host:', hostPlayerId);
-      
-      // Create Peer instance
-      this.peer = new Peer(this.localPlayerId, {
-        host: window.location.hostname,
-        port: window.location.protocol === 'https:' ? 443 : 80,
-        path: '/peerjs',
-        secure: window.location.protocol === 'https:',
-        debug: 2
-      });
-      
-      // Wait for Peer to be ready, then connect to host
-      await new Promise((resolve, reject) => {
-        this.peer!.on('open', (id) => {
-          console.log('[P2P] Peer open, ID:', id);
-          
-          // Connect to host
-          const hostConn = this.peer!.connect(hostPlayerId, { reliable: true });
-          this.setupConnection(hostConn, playerName, true);
-          this.connections.set(hostPlayerId, {
-            id: hostPlayerId,
-            name: 'Host',
-            connection: hostConn,
-            isHost: true
-          });
-          
-          console.log('[P2P] Connected to host:', hostPlayerId);
-          resolve(null);
+
+      this.peer.on('open', (id) => {
+        this.localPlayerId = id;
+        console.log('[P2P] Peer ID:', id);
+
+        const conn = this.peer!.connect(roomCode);
+
+        const hostConnection: PlayerConnection = {
+          id: roomCode,
+          name: 'HOST',
+          connection: conn,
+          isHost: true
+        };
+        this.connections.set(roomCode, hostConnection);
+
+        this.setupConnection(conn, playerName, true);
+
+        conn.on('open', () => {
+          console.log('[P2P] Connected to room:', roomCode);
+          resolve();
         });
-        
-        this.peer!.on('error', (error) => {
-          console.error('[P2P] Peer error:', error);
+
+        conn.on('error', (error) => {
+          console.error('[P2P] Connection error:', error);
+          this.onConnectionErrorCallback?.(error);
           reject(error);
         });
-        
-        // Timeout after 10 seconds
-        setTimeout(() => reject(new Error('Peer connection timeout')), 10000);
       });
-      
-      // Handle incoming connections from other players
-      this.peer.on('connection', (conn: DataConnection) => {
-        console.log('[P2P] Incoming connection from:', conn.peer);
-        this.setupConnection(conn, playerName, false);
-        this.connections.set(conn.peer, {
-          id: conn.peer,
-          name: conn.metadata?.name || 'Unknown',
-          connection: conn,
-          isHost: false
-        });
-        this.onPlayerJoinCallback?.(this.connections.get(conn.peer)!);
+
+      this.peer.on('error', (error) => {
+        console.error('[P2P] Peer error:', error);
+        this.onConnectionErrorCallback?.(error);
+        reject(error);
       });
-      
-      console.log('[P2P] Joined room:', roomCode);
-    } catch (error) {
-      console.error('[P2P] Error joining room:', error);
-      throw error;
-    }
+    });
   }
 
   private handleIncomingConnection(conn: DataConnection): void {
@@ -177,43 +126,10 @@ export class P2PManager {
 
     let playerName = '';
 
-    conn.on('open', () => {
-      console.log('[P2P] Connection opened with:', conn.peer);
-      
-      // Send current player list to the new player
-      const players = Array.from(this.connections.values()).map(p => ({
-        id: p.id,
-        name: p.name,
-        isHost: p.isHost
-      }));
-      
-      players.push({
-        id: this.localPlayerId,
-        name: this.localPlayerName,
-        isHost: true
-      });
-      
-      conn.send({
-        type: 'players-list',
-        data: { players },
-        senderId: this.localPlayerId,
-        timestamp: Date.now()
-      } as P2PMessage);
-      
-      // Notify all other players about the new player
-      this.broadcast({
-        type: 'player-join',
-        data: {
-          playerId: conn.peer,
-          playerName: playerName || 'Unknown'
-        }
-      });
-    });
-
     conn.on('data', (data: any) => {
       const message = data as P2PMessage;
 
-      if (message.type === 'player-join') {
+      if (message.type === 'player-join' && !this.connections.has(conn.peer)) {
         playerName = message.data.playerName;
         const playerConnection: PlayerConnection = {
           id: conn.peer,
@@ -224,17 +140,17 @@ export class P2PManager {
 
         this.connections.set(conn.peer, playerConnection);
         this.onPlayerJoinCallback?.(playerConnection);
-        
-        console.log('[P2P] Player joined:', playerName, '(', conn.peer, ')');
-        
-        // Broadcast to all players that someone joined
-        this.broadcast({
+
+        this.syncStateToPlayer(conn.peer);
+        this.broadcastToOthers({
           type: 'player-join',
           data: {
             playerId: conn.peer,
-            playerName: playerName
-          }
-        });
+            playerName
+          },
+          senderId: this.localPlayerId,
+          timestamp: Date.now()
+        }, conn.peer);
       } else {
         this.onMessageCallback?.(message);
       }
@@ -242,13 +158,14 @@ export class P2PManager {
 
     conn.on('close', () => {
       console.log('[P2P] Connection closed:', conn.peer);
-      this.connections.delete(conn.peer);
-      this.onPlayerLeaveCallback?.(conn.peer);
+      const playerId = conn.peer;
+      this.connections.delete(playerId);
+      this.onPlayerLeaveCallback?.(playerId);
 
       if (this.isHost) {
         this.broadcast({
           type: 'player-leave',
-          data: { playerId: conn.peer }
+          data: { playerId }
         });
       }
     });
@@ -261,75 +178,16 @@ export class P2PManager {
   private setupConnection(conn: DataConnection, playerName: string, sendJoinMessage: boolean): void {
     if (sendJoinMessage) {
       conn.on('open', () => {
-        console.log('[P2P] Sending player-join message to:', conn.peer);
-        conn.send({
+        this.sendMessage({
           type: 'player-join',
-          data: { playerName: this.localPlayerName },
-          senderId: this.localPlayerId,
-          timestamp: Date.now()
-        } as P2PMessage);
+          data: { playerName: this.localPlayerName }
+        }, conn.peer);
       });
     }
 
     conn.on('data', (data: any) => {
       const message = data as P2PMessage;
-      
-      // Handle player list from host
-      if (message.type === 'players-list' && !this.isHost) {
-        const { players } = message.data;
-        this.connections.clear();
-        
-        players.forEach((p: any) => {
-          if (p.id !== this.localPlayerId) {
-            if (p.isHost) {
-              // Already have host connection, skip
-              return;
-            }
-            // Connect to other players
-            const playerConn = this.peer!.connect(p.id, { reliable: true });
-            this.setupConnection(playerConn, playerName, false);
-            const playerConnection: PlayerConnection = {
-              id: p.id,
-              name: p.name,
-              connection: playerConn,
-              isHost: false
-            };
-            this.connections.set(p.id, playerConnection);
-            this.onPlayerJoinCallback?.(playerConnection);
-            console.log('[P2P] Connecting to player:', p.name, '(', p.id, ')');
-          }
-        });
-        
-        console.log('[P2P] Received players list:', players.length, 'players');
-      } else if (message.type === 'player-join') {
-        const { playerId, playerName: newPlayerName } = message.data;
-        if (playerId !== this.localPlayerId && !this.connections.has(playerId)) {
-          console.log('[P2P] New player joined:', newPlayerName, '(', playerId, ')');
-          
-          // Connect to the new player
-          const playerConn = this.peer!.connect(playerId, { reliable: true });
-          this.setupConnection(playerConn, playerName, false);
-          const playerConnection: PlayerConnection = {
-            id: playerId,
-            name: newPlayerName,
-            connection: playerConn,
-            isHost: false
-          };
-          this.connections.set(playerId, playerConnection);
-          this.onPlayerJoinCallback?.(playerConnection);
-        }
-      } else if (message.type === 'player-leave') {
-        const { playerId } = message.data;
-        const conn = this.connections.get(playerId);
-        if (conn) {
-          conn.connection.close();
-          this.connections.delete(playerId);
-          this.onPlayerLeaveCallback?.(playerId);
-          console.log('[P2P] Player left:', playerId);
-        }
-      } else {
-        this.onMessageCallback?.(message);
-      }
+      this.onMessageCallback?.(message);
     });
 
     conn.on('close', () => {
@@ -352,9 +210,7 @@ export class P2PManager {
 
     this.connections.forEach((player) => {
       try {
-        if (player.connection && player.connection.open) {
-          player.connection.send(fullMessage);
-        }
+        player.connection.send(fullMessage);
       } catch (error) {
         console.error('[P2P] Failed to send to', player.id, error);
       }
@@ -365,9 +221,7 @@ export class P2PManager {
     this.connections.forEach((player) => {
       if (player.id !== excludeId) {
         try {
-          if (player.connection && player.connection.open) {
-            player.connection.send(message);
-          }
+          player.connection.send(message);
         } catch (error) {
           console.error('[P2P] Failed to send to', player.id, error);
         }
@@ -377,7 +231,7 @@ export class P2PManager {
 
   sendMessage(message: Omit<P2PMessage, 'senderId' | 'timestamp'>, targetId: string): void {
     const player = this.connections.get(targetId);
-    if (player && player.connection && player.connection.open) {
+    if (player) {
       const fullMessage: P2PMessage = {
         ...message,
         senderId: this.localPlayerId,
@@ -432,7 +286,7 @@ export class P2PManager {
   }
 
   getTurnRotationOffset(): number {
-    const syncData = this.getSyncDataCallback?.() || {};
+    const syncData = this.onGetSyncDataCallback?.() || {};
     return syncData.turnRotationOffset || 0;
   }
 
@@ -458,20 +312,11 @@ export class P2PManager {
 
   disconnect(): void {
     this.connections.forEach((player) => {
-      try {
-        if (player.connection) {
-          player.connection.close();
-        }
-      } catch (e) {
-        console.error('[P2P] Error closing connection:', e);
-      }
+      player.connection.close();
     });
     this.connections.clear();
-    
-    if (this.peer) {
-      this.peer.destroy();
-      this.peer = null;
-    }
+    this.peer?.destroy();
+    this.peer = null;
   }
 
   private generateRoomCode(): string {

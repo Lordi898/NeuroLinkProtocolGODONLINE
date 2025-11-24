@@ -8,49 +8,48 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '@/lib/languageContext';
 import { useProgression } from '@/lib/progressionContext';
-import { useAuth } from '@/lib/authContext';
-import { LogOut } from 'lucide-react';
 
 interface JoinScreenProps {
   onCreateRoom: (playerName: string, adminMode?: boolean) => void;
   onJoinRoom: (playerName: string, roomCode: string, adminMode?: boolean) => void;
   onProfile?: () => void;
-  onLeaderboard?: () => void;
-  onMatchHistory?: () => void;
 }
 
-export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile, onLeaderboard, onMatchHistory }: JoinScreenProps) {
+export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile }: JoinScreenProps) {
   const [playerName, setPlayerName] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [adminCode, setAdminCode] = useState('');
   const [mode, setMode] = useState<'menu' | 'create' | 'join' | 'admin'>('menu');
   const { language, setLanguage, theme, setTheme, styleMode, setStyleMode, t } = useLanguage();
-  const { activateAdminMode, profile } = useProgression();
-  const { user, logout } = useAuth();
+  const { activateAdminMode } = useProgression();
   const [isAdminMode, setIsAdminMode] = useState(false);
 
   const handleAdminCode = () => {
-    // Admin code validation moved to backend for security
-    // Frontend no longer processes or validates admin codes
-    setMode('menu');
-    setAdminCode('');
+    if (adminCode === 'LORDI') {
+      setIsAdminMode(true);
+      activateAdminMode();
+      setMode('menu');
+      setAdminCode('');
+    }
   };
 
   const handleCreateRoom = () => {
-    if (user?.username) {
-      onCreateRoom(user.username.toUpperCase(), isAdminMode);
+    if (playerName.trim()) {
+      onCreateRoom(playerName.toUpperCase(), isAdminMode);
+      setPlayerName('');
     }
   };
 
   const handleJoinRoom = () => {
-    if (user?.username && roomCode.trim()) {
-      onJoinRoom(user.username.toUpperCase(), roomCode.toUpperCase(), isAdminMode);
+    if (playerName.trim() && roomCode.trim()) {
+      onJoinRoom(playerName.toUpperCase(), roomCode.toUpperCase(), isAdminMode);
+      setPlayerName('');
       setRoomCode('');
     }
   };
 
   return (
-    <div className="min-h-screen p-4 flex flex-col items-center justify-center gap-8 scanline relative">
+    <div className="min-h-screen p-4 flex flex-col items-center justify-center gap-8 scanline">
       <div className="text-center space-y-2 md:space-y-4 flex flex-col items-center">
         <GlitchText className="text-5xl md:text-7xl block">
           {t('neuroLink')}
@@ -135,42 +134,6 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile, onLeaderboard,
           >
             {t('joinGame')}
           </NeonButton>
-          
-          <TerminalCard title="STATS">
-            <div className="space-y-1 text-xs md:text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">WINS:</span>
-                <span className="text-primary font-bold" data-testid="text-total-wins">{profile?.totalWins || 0}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">IMPOSTOR:</span>
-                <span className="text-primary font-bold" data-testid="text-impostor-wins">{profile?.impostorWins || 0}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">XP:</span>
-                <span className="text-primary font-bold" data-testid="text-xp">{profile?.xp || 0}</span>
-              </div>
-            </div>
-          </TerminalCard>
-          
-          <NeonButton 
-            variant="secondary"
-            size="lg"
-            onClick={onLeaderboard}
-            data-testid="button-leaderboard"
-            className="w-full"
-          >
-            GLOBAL RANKINGS
-          </NeonButton>
-          <NeonButton 
-            variant="secondary"
-            size="lg"
-            onClick={onMatchHistory}
-            data-testid="button-match-history"
-            className="w-full"
-          >
-            MATCH HISTORY
-          </NeonButton>
           <NeonButton 
             variant="outline"
             size="lg"
@@ -220,12 +183,22 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile, onLeaderboard,
       {mode === 'create' && (
         <TerminalCard title={t('hostNewGame')} className="w-full max-w-md">
           <div className="space-y-4">
-            <div className="space-y-2 text-center text-sm text-muted-foreground">
-              <p>Playing as: <span className="text-primary font-bold font-mono">{user?.username || 'USER'}</span></p>
+            <div className="space-y-2 text-center">
+              <Label htmlFor="player-name" className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[12px]">{t('playerName')}</Label>
+              <Input
+                id="player-name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                placeholder={t('enterYourName')}
+                className="uppercase"
+                maxLength={20}
+                data-testid="input-player-name"
+              />
             </div>
             <div className="flex gap-2">
               <NeonButton 
                 onClick={handleCreateRoom}
+                disabled={!playerName.trim()}
                 data-testid="button-confirm-create"
                 className="flex-1"
               >
@@ -294,14 +267,14 @@ export function JoinScreen({ onCreateRoom, onJoinRoom, onProfile, onLeaderboard,
           </div>
         </TerminalCard>
       )}
-      {/* Creator Info Header */}
-      <div className="fixed top-4 left-4 text-xs text-muted-foreground space-y-1">
+      {/* Creator Info Footer */}
+      <div className="fixed bottom-4 text-center text-xs text-muted-foreground">
         <p>Created by <span className="font-bold text-secondary">Imanol Magaña</span></p>
         <a 
           href="https://github.com/Lordi898/ImpostorOnline_NeuroLinkProtocol.git"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-primary hover:text-primary/80 underline block"
+          className="text-primary hover:text-primary/80 underline"
           data-testid="link-github"
         >
           GitHub Repository

@@ -7,45 +7,45 @@
 /* CYBERPUNK TERMINAL THEME */
 :root,
 [data-theme="dark"] {
-  --button-outline: rgba(0, 200, 100, .25);
-  --badge-outline: rgba(0, 200, 100, .15);
+  --button-outline: rgba(0, 255, 0, .20);
+  --badge-outline: rgba(0, 255, 0, .10);
   --opaque-button-border-intensity: 8;
-  --elevate-1: rgba(0, 200, 100, .08);
-  --elevate-2: rgba(0, 200, 100, .15);
+  --elevate-1: rgba(0, 255, 0, .05);
+  --elevate-2: rgba(0, 255, 0, .12);
   --background: 0 0% 2%;
-  --foreground: 120 80% 45%;
-  --border: 120 60% 20%;
+  --foreground: 120 100% 50%;
+  --border: 120 100% 15%;
   --card: 0 0% 4%;
-  --card-foreground: 120 80% 45%;
-  --card-border: 120 60% 25%;
+  --card-foreground: 120 100% 50%;
+  --card-border: 120 100% 20%;
   --sidebar: 0 0% 3%;
-  --sidebar-foreground: 120 80% 45%;
-  --sidebar-border: 120 60% 20%;
-  --sidebar-primary: 120 80% 45%;
+  --sidebar-foreground: 120 100% 50%;
+  --sidebar-border: 120 100% 15%;
+  --sidebar-primary: 120 100% 50%;
   --sidebar-primary-foreground: 0 0% 0%;
-  --sidebar-accent: 180 80% 45%;
+  --sidebar-accent: 180 100% 50%;
   --sidebar-accent-foreground: 0 0% 0%;
-  --sidebar-ring: 120 80% 45%;
+  --sidebar-ring: 120 100% 50%;
   --popover: 0 0% 4%;
-  --popover-foreground: 120 80% 45%;
-  --popover-border: 120 60% 25%;
-  --primary: 120 80% 45%;
+  --popover-foreground: 120 100% 50%;
+  --popover-border: 120 100% 20%;
+  --primary: 120 100% 50%;
   --primary-foreground: 0 0% 0%;
-  --secondary: 180 80% 45%;
+  --secondary: 180 100% 50%;
   --secondary-foreground: 0 0% 0%;
   --muted: 0 0% 10%;
-  --muted-foreground: 120 70% 40%;
-  --accent: 180 80% 45%;
+  --muted-foreground: 120 100% 35%;
+  --accent: 180 100% 50%;
   --accent-foreground: 0 0% 0%;
-  --destructive: 0 85% 55%;
+  --destructive: 0 100% 50%;
   --destructive-foreground: 0 0% 100%;
   --input: 0 0% 8%;
-  --ring: 120 80% 45%;
-  --chart-1: 120 80% 45%;
-  --chart-2: 180 80% 45%;
-  --chart-3: 0 85% 55%;
-  --chart-4: 60 80% 45%;
-  --chart-5: 300 80% 45%;
+  --ring: 120 100% 50%;
+  --chart-1: 120 100% 50%;
+  --chart-2: 180 100% 50%;
+  --chart-3: 0 100% 50%;
+  --chart-4: 60 100% 50%;
+  --chart-5: 300 100% 50%;
   --font-sans: 'JetBrains Mono', monospace;
   --font-serif: 'JetBrains Mono', monospace;
   --font-mono: 'JetBrains Mono', monospace;
@@ -494,14 +494,6 @@
 [data-style="retro"][data-theme="dark"] input,
 [data-style="retro"][data-theme="dark"] textarea {
   font-family: 'Press Start 2P', cursive;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-
-[data-style="retro"][data-theme="dark"] button:hover,
-[data-style="retro"][data-theme="dark"] button:active,
-[data-style="retro"][data-theme="dark"] input:focus {
-  animation: retro-pulse-pixel 0.15s steps(3, end) infinite !important;
 }
 
 /* RETRO - Normal Theme */
@@ -581,14 +573,6 @@
 [data-style="retro"][data-theme="normal"] input,
 [data-style="retro"][data-theme="normal"] textarea {
   font-family: 'Press Start 2P', cursive;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-
-[data-style="retro"][data-theme="normal"] button:hover,
-[data-style="retro"][data-theme="normal"] button:active,
-[data-style="retro"][data-theme="normal"] input:focus {
-  animation: retro-pulse-pixel 0.15s steps(3, end) infinite !important;
 }
 
 /* RETRO - Light Theme */
@@ -1146,36 +1130,6 @@
     75% {
       transform: translateY(5px) skewY(-1deg);
       opacity: 0.95;
-    }
-  }
-
-  @keyframes retro-low-fps {
-    0%, 33% {
-      opacity: 1;
-      transform: translate(0, 0);
-    }
-    34%, 66% {
-      opacity: 0.7;
-      transform: translate(1px, 0px);
-    }
-    67%, 100% {
-      opacity: 0.95;
-      transform: translate(-1px, 1px);
-    }
-  }
-
-  @keyframes retro-pulse-pixel {
-    0%, 25% {
-      filter: brightness(1) drop-shadow(0 0 2px currentColor);
-    }
-    26%, 50% {
-      filter: brightness(1.2) drop-shadow(0 0 4px currentColor);
-    }
-    51%, 75% {
-      filter: brightness(0.9) drop-shadow(0 0 1px currentColor);
-    }
-    76%, 100% {
-      filter: brightness(1.15) drop-shadow(0 0 3px currentColor);
     }
   }
 
